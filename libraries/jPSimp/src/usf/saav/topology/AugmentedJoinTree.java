@@ -47,7 +47,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		JoinTree jt = new JoinTree( cl, comparator );
 		jt.run();
 
-		head = processTree( jt.getRoot() );
+		head = processTreeV2( jt.getRoot() );
 		
 		calculatePersistence();
 		
@@ -61,7 +61,25 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	}
 	
 
-
+	protected  AugmentedJoinTreeNode processTreeV2(JoinTreeNode current) {
+	    while (current.childCount() == 1) {
+	        current = current.getChild(0);
+	    }
+	    if (current.childCount() == 0) {
+	        nodes.add(createTreeNode(current.getPosition(), current.getValue()));
+	        return (AugmentedJoinTreeNode)nodes.lastElement();
+	    } else {
+	        AugmentedJoinTreeNode prev = processTreeV2(current.getChild(0));
+	        int i = 1;
+	        while(i < current.childCount()) {
+	            prev = createTreeNode(current.getPosition(), current.getValue(), 
+	                                  prev, processTreeV2(current.getChild(i)));
+	            nodes.add(prev);
+	            i++;
+	        }
+	        return prev;
+	    }
+	}
 	
 	protected AugmentedJoinTreeNode processTree( JoinTreeNode current ){
 		
