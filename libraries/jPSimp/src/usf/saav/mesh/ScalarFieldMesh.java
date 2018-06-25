@@ -56,10 +56,10 @@ public class ScalarFieldMesh extends Mesh {
 //		        System.out.println("ISNAN");
 		        isValid = false;
 		    }
-		    if (sf.getValue(i) == 0) {
+//		    if (sf.getValue(i) == 0) {
 //		        System.out.println("ISZERO");
-		        isValid = false;
-		    }
+//		        isValid = false;
+//		    }
 			if( !isValid )
 				elemID.put( i, -1 );
 			else {
