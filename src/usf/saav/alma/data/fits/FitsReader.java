@@ -85,6 +85,30 @@ public interface FitsReader {
 	 */
 	public ScalarField2D getSlice( IntRange1D x_range, IntRange1D y_range, int z, int w ) throws IOException;
 
+    /////////////////////////////////////////////////////////////////////
+    // FUNCTIONS FOR GETTING MASK FROM THE DATA                        //
+    /**
+     * Gets the slice.
+     *
+     * @param z the z
+     * @param w the w
+     * @return the slice
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    /////////////////////////////////////////////////////////////////////
+    public ScalarField2D getMask( int z, int w ) throws IOException;
+    
+    /**
+     * Gets the slice.
+     *
+     * @param x_range the x range
+     * @param y_range the y range
+     * @param z the z
+     * @param w the w
+     * @return the slice
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public ScalarField2D getMask( IntRange1D x_range, IntRange1D y_range, int z, int w ) throws IOException;
 
 	/////////////////////////////////////////////////////////////////////
 	// FUNCTIONS FOR GETTING A CUBE/VOLUME FROM THE DATA               //
@@ -128,6 +152,10 @@ public interface FitsReader {
 		public ScalarField2D getSlice( int z, int w ) throws IOException {
 			return getSlice( getAxesSize()[0], getAxesSize()[1], z, w );
 		}
+		
+        public ScalarField2D getMask( int z, int w ) throws IOException {
+            return getMask( getAxesSize()[0], getAxesSize()[1], z, w );
+        }
 
 		public ScalarField3D getVolume( int w ) throws IOException {
 			return getVolume( getAxesSize()[0], getAxesSize()[1], getAxesSize()[2], w );
