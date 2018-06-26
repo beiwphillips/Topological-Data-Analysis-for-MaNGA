@@ -58,8 +58,79 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	FitsHistory    history    = new FitsHistory( );
 	FitsProperties properties = new FitsProperties( );
 	FitsTable      table      = null;
+	
+	ImageTiler maskTiler;
+	FitsProperties maskProperties = new FitsProperties();
 
 
+	private void readingFLUX(ImageHDU img) throws FitsException {
+        int [] axes;
+        axes = img.getAxes();
+        nAxis = axes.length;
+
+        axesRange = new IntRange1D[4];
+        for(int i = 0; i < nAxis; i++){
+            axesRange[i] = new IntRange1D(0,axes[axes.length-i-1]-1);
+            print_info_message("Axis " + i + " -- " +axesRange[i].toString());
+        }
+        for(int i = nAxis; i < 4; i++){
+            axesRange[i] = new IntRange1D(0);
+            print_info_message("Axis " + i + " -- " +axesRange[i].toString());
+        }
+
+        //img.info( System.out );
+
+        this.coordOrigin = new double[nAxis];
+        this.coordDelta  = new double[nAxis];
+        for(int i = 0; i < nAxis; i++){
+            this.coordOrigin[i] = img.getHeader().getDoubleValue("CRVAL"+(i+1));
+            this.coordDelta[i] = img.getHeader().getDoubleValue("CDELT"+(i+1));
+        }
+        /*
+        coordOrigin[0] = img.getHeader().getDoubleValue("CRVAL1");
+        coordOrigin[1] = img.getHeader().getDoubleValue("CRVAL2");
+        coordOrigin[2] = img.getHeader().getDoubleValue("CRVAL3");
+        coordOrigin[3] = img.getHeader().getDoubleValue("CRVAL4");
+
+        coordDelta[0] = img.getHeader().getDoubleValue("CDELT1");
+        coordDelta[1] = img.getHeader().getDoubleValue("CDELT2");
+        coordDelta[2] = img.getHeader().getDoubleValue("CDELT3");
+        coordDelta[3] = img.getHeader().getDoubleValue("CDELT4");
+         */
+
+        Cursor<String, HeaderCard> iter = img.getHeader().iterator();
+        HeaderCard card;
+        while(iter.hasNext()){
+            card = iter.next(); 
+            if( card.getKey().compareTo("HISTORY")==0 ){
+                history.add( card.getComment() );
+            }
+            else if( card.getKey().length()==0 ){
+                continue;
+            }
+            else{
+                properties.add( new FitsProperty( card.getKey(), card.getValue(), card.getComment() ) );
+                //System.out.println( card.getKey() + " " + card.getValue() + " " + card.getComment() );
+            }
+        }
+
+        //img.get
+        tiler = img.getTiler();
+        
+	}
+	
+	private void readingMASK(ImageHDU img) throws FitsException {
+        
+        Cursor<String, HeaderCard> iter = img.getHeader().iterator();
+        HeaderCard card;
+        while(iter.hasNext()){
+            card = iter.next();
+            maskProperties.add( new FitsProperty( card.getKey(), card.getValue(), card.getComment() ) );
+        }
+        
+        maskTiler = img.getTiler();
+	}
+	
 	/**
 	 * Instantiates a new raw fits reader.
 	 *
@@ -83,63 +154,12 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 				ImageHDU img = (ImageHDU)header;
 
-				if( !("FLUX").equals(img.getHeader().getStringValue("EXTNAME")) ) continue;
+				if( ("MASK").equals(img.getHeader().getStringValue("EXTNAME")) )
+				    readingMASK(img);
 				
-				int [] axes;
-				axes = img.getAxes();
-				nAxis = axes.length;
-
-				axesRange = new IntRange1D[4];
-				for(int i = 0; i < nAxis; i++){
-					axesRange[i] = new IntRange1D(0,axes[axes.length-i-1]-1);
-					print_info_message("Axis " + i + " -- " +axesRange[i].toString());
-				}
-				for(int i = nAxis; i < 4; i++){
-					axesRange[i] = new IntRange1D(0);
-					print_info_message("Axis " + i + " -- " +axesRange[i].toString());
-				}
-
-				//img.info( System.out );
-
-				this.coordOrigin = new double[nAxis];
-				this.coordDelta  = new double[nAxis];
-				for(int i = 0; i < nAxis; i++){
-					this.coordOrigin[i] = img.getHeader().getDoubleValue("CRVAL"+(i+1));
-					this.coordDelta[i] = img.getHeader().getDoubleValue("CDELT"+(i+1));
-				}
-				/*
-				coordOrigin[0] = img.getHeader().getDoubleValue("CRVAL1");
-				coordOrigin[1] = img.getHeader().getDoubleValue("CRVAL2");
-				coordOrigin[2] = img.getHeader().getDoubleValue("CRVAL3");
-				coordOrigin[3] = img.getHeader().getDoubleValue("CRVAL4");
-
-				coordDelta[0] = img.getHeader().getDoubleValue("CDELT1");
-				coordDelta[1] = img.getHeader().getDoubleValue("CDELT2");
-				coordDelta[2] = img.getHeader().getDoubleValue("CDELT3");
-				coordDelta[3] = img.getHeader().getDoubleValue("CDELT4");
-				 */
-
-				Cursor<String, HeaderCard> iter = img.getHeader().iterator();
-				HeaderCard card;
-				while( (card=iter.next()) != null ){
-					if( card.getKey().compareTo("HISTORY")==0 ){
-						history.add( card.getComment() );
-					}
-					else if( card.getKey().compareTo("END")==0 ){
-						break;
-					}
-					else if( card.getKey().length()==0 ){
-						continue;
-					}
-					else{
-						properties.add( new FitsProperty( card.getKey(), card.getValue(), card.getComment() ) );
-						//System.out.println( card.getKey() + " " + card.getValue() + " " + card.getComment() );
-					}
-				}
-
-				//img.get
-				tiler = img.getTiler();
-
+				if( ("FLUX").equals(img.getHeader().getStringValue("EXTNAME")) )
+				    readingFLUX(img);
+				
 			}
 			else if ( header instanceof BinaryTableHDU ){
 
@@ -302,6 +322,17 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		print_info_message("getSlice( [" + x_range.start() + ", " + x_range.end() + "], [" + y_range.start() + ", " + y_range.end() + "], " + z + ", " + w + " )");
 		return new FitsSlice( x_range, y_range, z,w );
 	}
+	
+	/////////////////////////////////////////////////////////////////////
+    // FUNCTIONS FOR GETTING THE MASK FROM THE DATA                     //
+    /* (non-Javadoc)
+     * @see usf.saav.alma.data.fits.FitsReader#getMask(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int, int)
+     */
+    /////////////////////////////////////////////////////////////////////
+    public ScalarField2D getMask( IntRange1D x_range, IntRange1D y_range, int z, int w ) throws IOException{
+        print_info_message("getMask( [" + x_range.start() + ", " + x_range.end() + "], [" + y_range.start() + ", " + y_range.end() + "], " + z + ", " + w + " )");
+        return new FitsMask( x_range, y_range, z,w );
+    }
 
 
 	/////////////////////////////////////////////////////////////////////
@@ -466,6 +497,62 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		@Override public float getValue(int x, int y) { return data[y*width+x]; }
 
 	}
+	
+
+    /**
+     * The Class FitsSlice.
+     */
+    public class FitsMask extends ScalarField2D.Default {
+
+        int [] data;
+        int x0=0, y0=0;
+        int width,height;
+
+        /**
+         * Instantiates a new fits slice.
+         *
+         * @param x the x
+         * @param y the y
+         * @param z the z
+         * @param w the w
+         * @throws IOException Signals that an I/O exception has occurred.
+         */
+        public FitsMask( IntRange1D x, IntRange1D y, int z, int w) throws IOException {
+            width  = x.length();
+            height = y.length();
+            data = (int[]) maskTiler.getTile(
+                    tilePosition(x.start(), y.start(), z, w), 
+                    tileSize(x.length(), y.length(), 1, 1)
+                    );
+        }
+        
+        /* (non-Javadoc)
+         * @see usf.saav.alma.data.ScalarField2D.Default#getCoordinate(int, int)
+         */
+        @Override
+        public double [] getCoordinate( int x, int y ){
+            return new double[]{
+                    coordOrigin[0] + (x0+x)*coordDelta[0],
+                    coordOrigin[1] + (y0+y)*coordDelta[1]
+            };
+        }
+
+        /* (non-Javadoc)
+         * @see usf.saav.common.algorithm.Surface2D#getWidth()
+         */
+        @Override public int getWidth()  { return width; }
+
+        /* (non-Javadoc)
+         * @see usf.saav.common.algorithm.Surface2D#getHeight()
+         */
+        @Override public int getHeight() { return height; }
+
+        /* (non-Javadoc)
+         * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
+         */
+        @Override public float getValue(int x, int y) { return (float)data[y*width+x];}
+
+    }
 
 	/**
 	 * The Class FitsVolume.
