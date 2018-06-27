@@ -91,6 +91,18 @@ public class FitsAdder implements FitsReader {
 	public ScalarField2D getSlice(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {
 		return new Slice(x_range,y_range,z,w);
 	}
+	
+    @Override
+    public ScalarField2D getMask(int z, int w) throws IOException {
+        // TODO Auto-generated method stub
+        return new Mask(z, w);
+    }
+
+    @Override
+    public ScalarField2D getMask(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {
+        // TODO Auto-generated method stub
+        return new Mask(x_range, y_range, z, w);
+    }
 
 	@Override
 	public ScalarField3D getVolume(int w) throws IOException {
@@ -126,6 +138,29 @@ public class FitsAdder implements FitsReader {
 		
 	}
 	
+    class Mask extends ScalarField2D.Default {
+
+        ScalarField2D b0, b1;
+
+        Mask(int z, int w) throws IOException {
+            b0 = r0.getSlice(z,w);
+            b1 = r1.getSlice(z,w);
+        }
+
+        Mask(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {
+            b0 = r0.getSlice(x_range, y_range,z,w);
+            b1 = r1.getSlice(x_range, y_range,z,w);
+        }
+        
+        @Override public int getWidth() {  return b0.getWidth(); }
+        @Override public int getHeight() { return b0.getHeight(); }
+
+        @Override
+        public float getValue(int x, int y) {
+            return b0.getValue(x,y) + b1.getValue(x,y);
+        }
+        
+    }
 	
 	class Volume extends ScalarField3D.Default {
 		

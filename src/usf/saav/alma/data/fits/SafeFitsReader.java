@@ -104,6 +104,16 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		if( reader.getAxisCount()>=4 && !reader.getAxesSize()[3].inRange(w) ) return new ScalarField2D.Empty( x_range.length(), y_range.length(), Float.NaN );
 		return new SafeSlice( x_range, y_range, z, w);
 	}
+	
+    /* (non-Javadoc)
+     * @see usf.saav.alma.data.fits.FitsReader#getMask(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int, int)
+     */
+    @Override
+    public ScalarField2D getMask(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {
+        if( reader.getAxisCount()>=3 && !reader.getAxesSize()[2].inRange(z) ) return new ScalarField2D.Empty( x_range.length(), y_range.length(), Float.NaN );
+        if( reader.getAxisCount()>=4 && !reader.getAxesSize()[3].inRange(w) ) return new ScalarField2D.Empty( x_range.length(), y_range.length(), Float.NaN );
+        return new SafeMask(x_range, y_range, z, w);
+    }
 
 	/* (non-Javadoc)
 	 * @see usf.saav.alma.data.fits.FitsReader#getVolume(usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, usf.saav.common.range.IntRange1D, int)
@@ -173,18 +183,22 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		SafeSlice(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {
 			IntRange1D [] volSize = reader.getAxesSize();
 			
+			//selected range
 			this.rx = x_range;
 			this.ry = y_range;
 			this.z  = z;
 			
+			//legal range
 			IntRange1D subVolRX;
 			IntRange1D subVolRY;
 			subVolRX = new IntRange1D( Math.max(volSize[0].start(), x_range.start()), Math.min( volSize[0].end(), x_range.end() ) );
 			subVolRY = new IntRange1D( Math.max(volSize[1].start(), y_range.start()), Math.min( volSize[1].end(), y_range.end() ) );
-			
+            
+			//start coordinates with respect to selected start point
 			ox = subVolRX.start()-rx.start();
 			oy = subVolRY.start()-ry.start();
 			
+			//end coordinates with respect to selected start point
 			ex = ox+subVolRX.length();
 			ey = oy+subVolRY.length();
 			
@@ -203,6 +217,51 @@ public class SafeFitsReader extends FitsReader.Default implements FitsReader {
 		}
 	}
 
-	
+    class SafeMask extends ScalarField2D.Default {
+
+        ScalarField2D baseMask;
+        
+        IntRange1D rx,ry;
+        int z;
+        int ox, oy;
+        int ex, ey;
+        
+        SafeMask(IntRange1D x_range, IntRange1D y_range, int z, int w) throws IOException {
+            IntRange1D [] volSize = reader.getAxesSize();
+            
+            //selected range
+            this.rx = x_range;
+            this.ry = y_range;
+            this.z  = z;
+            
+            //legal range
+            IntRange1D subVolRX;
+            IntRange1D subVolRY;
+            subVolRX = new IntRange1D( Math.max(volSize[0].start(), x_range.start()), Math.min( volSize[0].end(), x_range.end() ) );
+            subVolRY = new IntRange1D( Math.max(volSize[1].start(), y_range.start()), Math.min( volSize[1].end(), y_range.end() ) );
+            
+            //start coordinates with respect to selected start point
+            ox = subVolRX.start()-rx.start();
+            oy = subVolRY.start()-ry.start();
+            
+            //end coordinates with respect to selected start point
+            ex = ox+subVolRX.length();
+            ey = oy+subVolRY.length();
+            
+            baseMask = reader.getMask(subVolRX, subVolRY, z, w);
+        }
+        
+        @Override public double [] getCoordinate( int x, int y ){ return baseMask.getCoordinate(x, y); }
+        @Override public int getWidth() {  return rx.length(); }
+        @Override public int getHeight() { return ry.length(); }
+
+        @Override
+        public float getValue(int x, int y) {
+            if( x < ox || x >= ex ) return Float.NaN;
+            if( y < oy || y >= ey ) return Float.NaN;
+            return baseMask.getValue(x-ox, y-oy);
+        }
+    }
+    
 }
 
