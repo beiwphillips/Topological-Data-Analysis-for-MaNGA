@@ -39,6 +39,7 @@ import usf.saav.scalarfield.PersistenceSimplifier2D;
 import usf.saav.scalarfield.PersistenceSimplifier3D;
 import usf.saav.scalarfield.ScalarField2D;
 import usf.saav.scalarfield.ScalarField3D;
+import usf.saav.scalarfield.ScalarFieldND;
 import usf.saav.topology.TopoTree;
 import usf.saav.topology.PseudoContourTree;
 
@@ -146,6 +147,10 @@ public class AlmaCT extends BasicObject {
 						e.printStackTrace();
 					}
 					if( stop ) return;
+					
+					ScalarField2D tmpSlice = slice.get(cz);
+		            double[] valueRange = ScalarFieldND.Default.getValueRange(tmpSlice);
+		            if (valueRange[0] == valueRange[1]) break;
 					
 					print_info_message("Constructing Mesh");
 					cl.put( cz, new ConnectedComponentMesh( new ScalarFieldMesh( slice.get(cz) ) ) );
