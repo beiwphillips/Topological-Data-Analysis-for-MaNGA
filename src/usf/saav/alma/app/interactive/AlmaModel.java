@@ -44,7 +44,7 @@ public class AlmaModel extends BasicObject {
     public MonitoredInteger				monX		  = new MonitoredInteger(0);
     public MonitoredInteger				monY		  = new MonitoredInteger(0);
     public MonitoredInteger				monZ		  = new MonitoredInteger(0);
-    public MonitoredDouble				monZoom		  = new MonitoredDouble(1.0);
+    public MonitoredDouble				monZoom		  = new MonitoredDouble(10.0);
     public MonitoredInteger				monZ0		  = new MonitoredInteger(0);
     public MonitoredInteger				monZ1		  = new MonitoredInteger(0);
     public MonitoredEnum<MouseMode>		monMM	  	  = new MonitoredEnum<MouseMode>( MouseMode.NAVIGATE );
