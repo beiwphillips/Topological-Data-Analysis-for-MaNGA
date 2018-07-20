@@ -214,15 +214,18 @@ public class AlmaGui extends JPanel implements ActionListener {
 	 */
 	public void refreshVariables( ){
 		try {
-			if( Integer.parseInt( guiZ.getText() ) != model.monZ.get() ){
-				guiZ.setText( Integer.toString(model.monZ.get()) );
-			}
 			if( Integer.parseInt( guiZ0.getText() ) != model.monZ0.get() ){
-				guiZ0.setText( Integer.toString(model.monZ0.get()) );
+//				guiZ0.setText( Integer.toString(model.monZ0.get()) );
+				model.monZ0.set(Integer.parseInt(guiZ0.getText()));
 			}
 			if( Integer.parseInt( guiZ1.getText() ) != model.monZ1.get() ){
-				guiZ1.setText( Integer.toString(model.monZ1.get()) );
+//				guiZ1.setText( Integer.toString(model.monZ1.get()) );
+				model.monZ1.set(Integer.parseInt(guiZ1.getText()));
 			}
+			if( Integer.parseInt( guiZ.getText() ) != model.monZ.get() ){
+//	            guiZ.setText( Integer.toString(model.monZ.get()) );
+	            model.monZ.set(Integer.parseInt(guiZ.getText()));
+	        }
 		} catch( NumberFormatException nfe ){
 			guiZ.setText(  Integer.toString(model.monZ.get()) );
 			guiZ0.setText( Integer.toString(model.monZ0.get()) );
