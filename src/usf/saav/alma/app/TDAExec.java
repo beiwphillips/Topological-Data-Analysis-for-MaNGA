@@ -76,11 +76,11 @@ public class TDAExec {
 			for(int d = 0; d < fits.getAxesSize()[2].length(); d++ ){
 				
 				ScalarField2D writeslice = fits.getSlice(d, 0);
-//				double[] valueRange = ScalarFieldND.Default.getValueRange(writeslice);
-//				if (valueRange[0] == valueRange[1]) {
-//				    fw.writeSlice(writeslice);
-//				    continue;
-//				}
+				double[] valueRange = ScalarFieldND.Default.getValueRange(writeslice);
+				if (valueRange[0] == 0 && valueRange[1] == 0) {
+				    fw.writeSlice(writeslice);
+				    continue;
+				}
 				if( (treedim == TreeDimension.DIM_2D || treedim == TreeDimension.DIM_2D_STACK) && zr.inRange(d) ){
 					sliceProc.process(fits, xr, yr, d, simplification);
 					writeslice = new Composite2D(writeslice, sliceProc.ps2d, xr.start(), yr.start() );
