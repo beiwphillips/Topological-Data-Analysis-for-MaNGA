@@ -564,7 +564,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	 */
 	public class FitsVolume extends ScalarField3D.Default {
 
-		float [] data;
+	    double [] data;
 		int width,height,depth;
 		int x0=0, y0=0, z0=0;
 
@@ -581,7 +581,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 			width  = x.length();
 			height = y.length();
 			depth  = z.length();
-			data = (float[]) tiler.getTile( 
+			data = (double[]) tiler.getTile( 
 					tilePosition( x.start(), y.start(), z.start(), w ), 
 					tileSize( x.length(), y.length(), z.length(), 1 ) 
 					);
@@ -605,7 +605,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		/* (non-Javadoc)
 		 * @see usf.saav.alma.data.ScalarField3D#getValue(int, int, int)
 		 */
-		@Override public float getValue(int x, int y, int z) { return data[z*width*height + y*width + x]; }
+		@Override public float getValue(int x, int y, int z) { return (float) data[z*width*height + y*width + x]; }
 
 	}
 

@@ -48,7 +48,10 @@ public interface ScalarFieldND {
 					max = Math.max(max, v);
 				}
 			}
-			return new double[]{min,max};
+			if (nanCnt == sf.getSize())
+			    return new double[]{0,0};
+			else
+			    return new double[]{min,max};
 		}
 		public double [] getValueRange(){
 			double min =  Double.MAX_VALUE;
