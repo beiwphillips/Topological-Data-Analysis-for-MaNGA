@@ -148,48 +148,53 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		//System.out.println( CompressionManager.isCompressed(file) );
 
 		fits = new Fits( file );
-
-		for(BasicHDU<?> header : fits.read() ){
-			if( header instanceof ImageHDU ){
-
-				ImageHDU img = (ImageHDU)header;
-
-				if( ("MASK").equals(img.getHeader().getStringValue("EXTNAME")) )
-				    readingMASK(img);
-				
-				if( ("FLUX").equals(img.getHeader().getStringValue("EXTNAME")) )
-				    readingFLUX(img);
-				
-			}
-			else if ( header instanceof BinaryTableHDU ){
-
-				BinaryTableHDU bt = (BinaryTableHDU)header;
-
-				table = new FitsTable( bt.getNRows(), bt.getNCols() );
-				for( int i = 0; i < bt.getNCols(); i++){
-					table.setColumnLabel(i, bt.getColumnName(i));
-				}
-
-				for( int row = 0; row < bt.getNRows(); row++){
-					for(int col = 0; col < bt.getNCols(); col++){
-						table.setData( row, col, bt.getElement( row, col) );
-					}
-				}
-
-				/*
-				for( int s : bt.getAxes() ){
-					print_info_message( Integer.toString(s) );
-				}
-
-				print_info_message( table.toString() );
-				 */
-
-			}
-			else{
-				print_warning_message("Unknown Header Type: " + header.getClass().getSimpleName() );
-			}
-
-		}
+		
+		BasicHDU<?>[] headers = fits.read();
+		ImageHDU img = (ImageHDU) headers[0];
+		readingFLUX(img);
+		        
+//		for(BasicHDU<?> header : fits.read() ){
+//			if( header instanceof ImageHDU ){
+//
+//				ImageHDU img = (ImageHDU)header;
+//
+//				if( ("MASK").equals(img.getHeader().getStringValue("EXTNAME")) )
+//				    readingMASK(img);
+//				
+//				if( ("FLUX").equals(img.getHeader().getStringValue("EXTNAME")) ) {
+//				    readingFLUX(img);
+//				}
+//				
+//			}
+//			else if ( header instanceof BinaryTableHDU ){
+//
+//				BinaryTableHDU bt = (BinaryTableHDU)header;
+//
+//				table = new FitsTable( bt.getNRows(), bt.getNCols() );
+//				for( int i = 0; i < bt.getNCols(); i++){
+//					table.setColumnLabel(i, bt.getColumnName(i));
+//				}
+//
+//				for( int row = 0; row < bt.getNRows(); row++){
+//					for(int col = 0; col < bt.getNCols(); col++){
+//						table.setData( row, col, bt.getElement( row, col) );
+//					}
+//				}
+//
+//				/*
+//				for( int s : bt.getAxes() ){
+//					print_info_message( Integer.toString(s) );
+//				}
+//
+//				print_info_message( table.toString() );
+//				 */
+//
+//			}
+//			else{
+//				print_warning_message("Unknown Header Type: " + header.getClass().getSimpleName() );
+//			}
+//
+//		}
 
 		//System.exit(0);
 
@@ -371,11 +376,11 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 	class FitsRow extends ScalarField1D.Default {
 
-		float [] data;
+		double[] data;
 		int x0 = 0;
 
 		public FitsRow(IntRange1D x, int y, int z, int w) throws IOException {
-			data = (float[]) tiler.getTile( 
+			data = (double[]) tiler.getTile( 
 					tilePosition( x.start(), y, z, w ), 
 					tileSize( x.length(), 1, 1, 1 ) 
 					);
@@ -390,16 +395,16 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
-		@Override public float getValue(int nodeID) { return data[nodeID]; }
+		@Override public float getValue(int nodeID) { return (float) data[nodeID]; }
 	}
 
 	class FitsColumn extends ScalarField1D.Default {
 
-		float [] data;
+	    double [] data;
 		int y0 = 0;
 
 		public FitsColumn(int x, IntRange1D y, int z, int w) throws IOException {
-			data = (float[]) tiler.getTile( 
+			data = (double[]) tiler.getTile( 
 					tilePosition( x, y.start(), z, w ), 
 					tileSize( 1, y.length(), 1, 1 ) 
 					);
@@ -415,16 +420,16 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
-		@Override public float getValue(int nodeID) { return data[nodeID]; }
+		@Override public float getValue(int nodeID) { return (float) data[nodeID]; }
 	}
 
 	class FitsLine extends ScalarField1D.Default {
 
-		float [] data;
+	    double [] data;
 		int z0 = 0;
 
 		public FitsLine(int x, int y, IntRange1D z, int w) throws IOException {
-			data = (float[]) tiler.getTile( 
+			data = (double[]) tiler.getTile( 
 					tilePosition( x, y, z.start(), w ), 
 					tileSize( 1, 1, z.length(), 1 ) 
 					);
@@ -439,7 +444,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 
 		@Override public int getWidth() { return data.length; }
 		@Override public int getSize() { return data.length; }
-		@Override public float getValue(int nodeID) { return data[nodeID]; }
+		@Override public float getValue(int nodeID) { return (float) data[nodeID]; }
 	}
 
 
@@ -448,7 +453,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 	 */
 	public class FitsSlice extends ScalarField2D.Default {
 
-		float [] data;
+		double[] data;
 		int x0=0, y0=0;
 		int width,height;
 
@@ -464,7 +469,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		public FitsSlice( IntRange1D x, IntRange1D y, int z, int w) throws IOException {
 			width  = x.length();
 			height = y.length();
-			data = (float[]) tiler.getTile( 
+			data = (double[]) tiler.getTile( 
 					tilePosition( x.start(), y.start(), z, w ), 
 					tileSize( x.length(), y.length(), 1, 1 ) 
 					);
@@ -494,7 +499,7 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 		/* (non-Javadoc)
 		 * @see usf.saav.alma.data.ScalarField2D#getValue(int, int)
 		 */
-		@Override public float getValue(int x, int y) { return data[y*width+x]; }
+		@Override public float getValue(int x, int y) { return (float) data[y*width+x]; }
 
 	}
 	
