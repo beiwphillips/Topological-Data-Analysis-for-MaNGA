@@ -114,7 +114,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	}
 	
 	public boolean isActive(int i){
-		return getPersistence(i) >= simplify;
+		return getPersistence(i) > simplify;
 	}
 
 	
