@@ -149,6 +149,11 @@ public class ScalarFieldMesh extends Mesh {
 			return sf.getValue(nid);
 		}
 
+        @Override
+        public int size() {
+            return 1;
+        }
+        
 		@Override
 		public int[] neighbors() {
 			int [] n = getNeighbors(nid);

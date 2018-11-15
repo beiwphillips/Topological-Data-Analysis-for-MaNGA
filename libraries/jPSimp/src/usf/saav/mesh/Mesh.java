@@ -46,6 +46,7 @@ public abstract class Mesh extends Vector<Mesh.Vertex> {
 		int [] neighbors();
 		int [] positions();
 		int id();
+		int size();
 	}
 	
 }
