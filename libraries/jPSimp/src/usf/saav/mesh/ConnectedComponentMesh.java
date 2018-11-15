@@ -79,6 +79,11 @@ public class ConnectedComponentMesh extends Mesh {
 		public float value() {
 			return get(0).value();
 		}
+		
+		@Override
+		public int size() {
+		    return super.size();
+		}
 
 		@Override
 		public int[] neighbors() {
