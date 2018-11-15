@@ -39,6 +39,7 @@ public interface TopoTreeNode {
 	float getDeath();
 	float getPersistence();
 
+	int getSize();
 	
 	
 	public static class ComparePersistenceAscending implements Comparator<TopoTreeNode> {
@@ -57,6 +58,23 @@ public interface TopoTreeNode {
 		}
 	}
 
+	public static class CompareSizeAscending implements Comparator<TopoTreeNode> {
+        @Override
+        public int compare(TopoTreeNode o1, TopoTreeNode o2) {
+            if (o1.getSize() > o2.getSize()) return 1;
+            if (o1.getSize() < o2.getSize()) return -1;
+            return 0;
+        }
+    }
+	
+	public static class CompareSizeDescending implements Comparator<TopoTreeNode> {
+        @Override
+        public int compare(TopoTreeNode o1, TopoTreeNode o2) {
+            if (o1.getSize() < o2.getSize()) return 1;
+            if (o1.getSize() > o2.getSize()) return -1;
+            return 0;
+        }
+    }
 	
 }
 
