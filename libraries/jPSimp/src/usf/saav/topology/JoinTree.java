@@ -34,7 +34,7 @@ public class JoinTree implements Runnable {
  
 	private   Comparator<? super Node> comparator;
 	private   Mesh sf;
-	private   int size;
+	private   int width;
 	private   Node head;
 	protected boolean operationComplete = false;
 
@@ -65,12 +65,12 @@ public class JoinTree implements Runnable {
 		
 		if( operationComplete ) return;
 
-		this.size = sf.getWidth();
+		this.width = sf.getWidth();
 		Node [] grid;
-		grid = new Node[size];
+		grid = new Node[width];
 
 		// We first order the points for adding to the tree.
-		Queue< Node > tq = new PriorityQueue< Node >( size, comparator );
+		Queue< Node > tq = new PriorityQueue< Node >( width, comparator );
 		for(int i = 0; i < sf.getWidth(); i++ ){
 			tq.add( new Node( sf.get(i).value(), i ) );
 		}
