@@ -1,6 +1,5 @@
 package usf.saav.topology;
 
-import java.util.Stack;
 import java.util.Vector;
 
 import usf.saav.common.BasicObject;

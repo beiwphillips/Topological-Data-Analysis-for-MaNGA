@@ -20,6 +20,7 @@
 package usf.saav.topology;
 
 import java.util.Comparator;
+import java.util.Stack;
 
 import usf.saav.mesh.Mesh;
 import usf.saav.topology.TopoTree;
