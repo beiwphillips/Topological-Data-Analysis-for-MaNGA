@@ -200,30 +200,34 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	
 	public abstract class AugmentedJoinTreeNode extends JoinTreeNode implements TopoTreeNode {
 		
-		private int   location;
+		private int location;
 		private float value;
+		private int size;
 		
 		
-		protected AugmentedJoinTreeNode( int loc, float val ){
+		protected AugmentedJoinTreeNode( int loc, float val, int size ){
 			this.location = loc;
 			this.value = val;
+			this.size = size;
 		}
 		
-		protected AugmentedJoinTreeNode( int loc, float val, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
+		protected AugmentedJoinTreeNode( int loc, float val, int size, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
 			this.location = loc;
 			this.value = val;
+			this.size = size;
 			this.addChild(c0);
 			this.addChild(c1);
 		}
 		
 		
 		@Override public int	getPosition() { return location; }
-		@Override public float	getValue() { 	return value;	 }
+		@Override public float getValue() { return value; }
+		@Override public int getSize() { return size; }
 
 	}
 	
-	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val );
-	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 );
+	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, int size );
+	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, int size, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 );
 
 	
 
