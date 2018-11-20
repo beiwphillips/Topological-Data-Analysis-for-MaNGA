@@ -61,76 +61,85 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		print_info_message( "Building tree complete" );
 	}
 	
-
 	protected  AugmentedJoinTreeNode processTreeV2(JoinTreeNode current) {
+	    int cumulatedSize = current.getSize();
 	    while (current.childCount() == 1) {
 	        current = current.getChild(0);
+	        cumulatedSize += current.getSize();
 	    }
 	    if (current.childCount() == 0) {
-	        nodes.add(createTreeNode(current.getPosition(), current.getValue()));
+	        nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedSize));
 	        return (AugmentedJoinTreeNode)nodes.lastElement();
 	    } else {
 	        AugmentedJoinTreeNode prev = processTreeV2(current.getChild(0));
 	        int i = 1;
 	        while(i < current.childCount()) {
+	            AugmentedJoinTreeNode newChild = processTreeV2(current.getChild(i));
 	            prev = createTreeNode(current.getPosition(), current.getValue(), 
-	                                  prev, processTreeV2(current.getChild(i)));
+	                                  prev.getSize() + newChild.getSize(), prev, newChild);
 	            nodes.add(prev);
 	            i++;
 	        }
+	        prev.size += cumulatedSize;
 	        return prev;
 	    }
 	}
 	
 	protected AugmentedJoinTreeNode processTree( JoinTreeNode current ){
-		
+	    
+	    int cumulatedSize = current.getSize();
 		while( current.childCount() == 1 ){
 			current = current.getChild(0);
+			cumulatedSize += current.getSize();
 		}
 		if( current.childCount() == 0 ){
-			nodes.add( createTreeNode( current.getPosition(), current.getValue() ) );
+			nodes.add( createTreeNode( current.getPosition(), current.getValue(), cumulatedSize ) );
 			return (AugmentedJoinTreeNode)nodes.lastElement();
 		}
 		if( current.childCount() == 2 ){
-			nodes.add( createTreeNode( current.getPosition(), current.getValue(),
-							processTree( current.getChild(0) ),
-							processTree( current.getChild(1) ) 
-						) );
+		    AugmentedJoinTreeNode child0 = processTree(current.getChild(0));
+		    AugmentedJoinTreeNode child1 = processTree(current.getChild(1));
+			nodes.add( createTreeNode( current.getPosition(), current.getValue(), 
+			                           child0.getSize() + child1.getSize() + cumulatedSize, 
+			                           child0, child1 ) );
 			return (AugmentedJoinTreeNode)nodes.lastElement();
 		}
 		// Monkey saddle --- should probably do something a little smarter here
 		if( current.childCount() == 3 ){
-			AugmentedJoinTreeNode child = createTreeNode( current.getPosition(), current.getValue(),
-														processTree( current.getChild(0) ),
-														processTree( current.getChild(1) ) 
-													);
+		    AugmentedJoinTreeNode child0 = processTree(current.getChild(0));
+		    AugmentedJoinTreeNode child1 = processTree(current.getChild(1));
+		    AugmentedJoinTreeNode child2 = processTree(current.getChild(2));
+		    
+			AugmentedJoinTreeNode child01 = createTreeNode( current.getPosition(), current.getValue(), 
+			                                                child0.getSize() + child1.getSize(), 
+			                                                child0, child1 );
 			AugmentedJoinTreeNode parent = createTreeNode( current.getPosition(), current.getValue(),
-														child,
-														processTree( current.getChild(2) ) 
-				);
-			nodes.add(child);
+			                                               child01.getSize() + child2.getSize() + cumulatedSize, 
+			                                               child01, child2 );
+			nodes.add(child01);
 			nodes.add(parent);
 			
 			return parent;
 		}
 		// 4-way saddle --- yicks!
 		if( current.childCount() == 4 ){
-			AugmentedJoinTreeNode child1 = createTreeNode( current.getPosition(), current.getValue(),
-														processTree( current.getChild(0) ),
-														processTree( current.getChild(1) ) 
-													);
-			AugmentedJoinTreeNode child0 = createTreeNode( current.getPosition(), current.getValue(),
-														child1,
-														processTree( current.getChild(2) ) 
-				);
-
+		    AugmentedJoinTreeNode child0 = processTree(current.getChild(0));
+		    AugmentedJoinTreeNode child1 = processTree(current.getChild(1));
+		    AugmentedJoinTreeNode child2 = processTree(current.getChild(2));
+		    AugmentedJoinTreeNode child3 = processTree(current.getChild(3));
+		    
+			AugmentedJoinTreeNode child01 = createTreeNode( current.getPosition(), current.getValue(),
+			                                                child0.getSize() + child1.getSize(), 
+			                                                child0, child1 );
+			AugmentedJoinTreeNode child012 = createTreeNode( current.getPosition(), current.getValue(),
+			                                                 child01.getSize() + child2.getSize(), 
+			                                                 child01, child2 );
 			AugmentedJoinTreeNode parent = createTreeNode( current.getPosition(), current.getValue(),
-														child0,
-														processTree( current.getChild(3) ) 
-				);
+			                                               child012.getSize() + child3.getSize() + cumulatedSize, 
+			                                               child012, child3 );
 
-			nodes.add(child1);
-			nodes.add(child0);
+			nodes.add(child01);
+			nodes.add(child012);
 			nodes.add(parent);
 			
 			return parent;
