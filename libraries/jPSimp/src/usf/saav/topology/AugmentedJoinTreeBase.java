@@ -61,7 +61,7 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 
 	@Override
 	public boolean isActive(int i){
-		return getPersistence(i) > simplify;
+		return getPersistence(i) > simplify * max_persistence;
 	}
 
 	@Override
