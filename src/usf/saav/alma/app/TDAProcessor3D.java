@@ -65,6 +65,7 @@ public class TDAProcessor3D extends BasicObject {
 
 		this.print_info_message("Simplifying Tree");
 		ct.setPersistentSimplification( simplification );
+		ct.setSimplificationMetric( metric );
 		this.print_info_message("Simplfying Field");
 		ps3d = new PersistenceSimplifier3D( vol, ct, cl, true );
 

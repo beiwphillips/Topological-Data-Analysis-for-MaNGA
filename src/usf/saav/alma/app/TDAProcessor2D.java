@@ -65,6 +65,7 @@ public class TDAProcessor2D extends BasicObject {
 
 		this.print_info_message("Simplifying Tree");
 		ct.setPersistentSimplification( simplification );
+		ct.setSimplificationMetric( metric );
 		this.print_info_message("Simplfying Field");
 		ps2d = new PersistenceSimplifier2D( slice, ct, cl, true );
 
