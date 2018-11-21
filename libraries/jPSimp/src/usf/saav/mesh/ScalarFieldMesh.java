@@ -69,7 +69,10 @@ public class ScalarFieldMesh extends Mesh {
 		}
 	}
 	
-	
+    @Override
+    public int getSize() {
+        return super.getWidth();
+    }
 	
 	private int[] getNeighbors( ScalarField3D sf, int nodeID) {
 			int width = sf.getWidth();

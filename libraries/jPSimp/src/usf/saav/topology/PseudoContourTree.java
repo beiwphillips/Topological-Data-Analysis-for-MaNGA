@@ -35,6 +35,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	private AugmentedJoinTreeNode global_max;
 	private float persistence_max = 0;
 	private float simplify = 0.0f;
+	private int size_max = 0;
 	private String metric = "persistence";
 	
 	public PseudoContourTree( Mesh sf ){
@@ -62,6 +63,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 		}
 		
 		persistence_max = Math.max( mt.getMaxPersistence(), st.getMaxPersistence() );
+		size_max = sf.getSize();
 		global_min = mt.getGlobalExtreme();
 		global_max = st.getGlobalExtreme();
 		
@@ -81,6 +83,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	public String getSimplificationMetric( ){ return metric; }
 	
 	public float getMaxPersistence(){ return persistence_max; }
+	public int getMaxSize(){ return size_max; }
 	public AugmentedJoinTreeNode getGlobalMin(){ return global_min; }
 	public AugmentedJoinTreeNode getGlobalMax(){ return global_max; }
 	

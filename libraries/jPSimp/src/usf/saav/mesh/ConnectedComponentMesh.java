@@ -64,6 +64,11 @@ public class ConnectedComponentMesh extends Mesh {
 			}
 		}
 	}
+	
+	@Override
+	public int getSize() {
+	    return tmpVec.size();
+	}
 
 
 	public class ConnectedComponent extends Vector<Vertex> implements Vertex {
