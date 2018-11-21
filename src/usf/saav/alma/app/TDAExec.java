@@ -41,6 +41,7 @@ public class TDAExec {
 	public String filename = null;
 	public IntRange1D xr=null,yr=null,zr=null;
 	public float simplification = 0;
+	public String metric = null;
 	public TreeDimension treedim = TreeDimension.DIM_2D;
 	public String  output  = null;
 
@@ -68,7 +69,7 @@ public class TDAExec {
 
 		if( output == null ) return;
 		if( treedim == TreeDimension.DIM_3D ){
-			volProc.process( fits,  xr, yr, zr, simplification );
+			volProc.process( fits,  xr, yr, zr, simplification, metric );
 		}		
 		try {
 			FitsWriter fw = new FitsWriter( fits.getAxesSize()[0].length(), fits.getAxesSize()[1].length(), fits.getAxesSize()[2].length() );
@@ -82,7 +83,7 @@ public class TDAExec {
 				    continue;
 				}
 				if( (treedim == TreeDimension.DIM_2D || treedim == TreeDimension.DIM_2D_STACK) && zr.inRange(d) ){
-					sliceProc.process(fits, xr, yr, d, simplification);
+					sliceProc.process(fits, xr, yr, d, simplification, metric);
 					writeslice = new Composite2D(writeslice, sliceProc.ps2d, xr.start(), yr.start() );
 				}
 				if( treedim == TreeDimension.DIM_3D && zr.inRange(d) ){

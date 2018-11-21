@@ -40,10 +40,11 @@ public class TDAProcessor2D extends BasicObject {
 		super(true);
 	}
 
-	public void process( FitsReader fits, IntRange1D xr, IntRange1D yr, int z, float simplification ){
+	public void process( FitsReader fits, IntRange1D xr, IntRange1D yr, int z, 
+	        float simplification, String metric ){
 
 		try {
-			process( fits.getSlice( xr,  yr,  z, 0 ), simplification );
+			process( fits.getSlice( xr,  yr,  z, 0 ), simplification, metric);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -51,7 +52,7 @@ public class TDAProcessor2D extends BasicObject {
 
 	}
 
-	public void process( ScalarField2D _slice, float simplification ){
+	public void process( ScalarField2D _slice, float simplification, String metric ){
 		
 		slice = _slice;
 

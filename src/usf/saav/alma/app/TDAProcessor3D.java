@@ -40,10 +40,11 @@ public class TDAProcessor3D extends BasicObject {
 		super(true);
 	}
 
-	public void process( FitsReader fits, IntRange1D xr, IntRange1D yr, IntRange1D zr, float simplification ){
+	public void process( FitsReader fits, IntRange1D xr, IntRange1D yr, IntRange1D zr, 
+	        float simplification, String metric ){
 
 		try {
-			process( fits.getVolume( xr,  yr,  zr, 0 ), simplification );
+			process( fits.getVolume( xr,  yr,  zr, 0 ), simplification, metric );
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -51,7 +52,7 @@ public class TDAProcessor3D extends BasicObject {
 
 	}
 
-	public void process( ScalarField3D _vol, float simplification ){
+	public void process( ScalarField3D _vol, float simplification, String metric ){
 		
 		vol = _vol;
 
