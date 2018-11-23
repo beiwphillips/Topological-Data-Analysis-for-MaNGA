@@ -21,8 +21,8 @@ package usf.saav.topology;
 
 public interface TopoTree {
 	
-	void  setPersistentSimplification( float threshold );
-	float getPersistentSimplification( );
+	void  setSimplificationLevel( float threshold );
+	float getSimplificationLevel( );
 	
 	boolean isActive(int i);
 	

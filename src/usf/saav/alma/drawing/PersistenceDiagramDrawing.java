@@ -72,7 +72,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 				bd_range.expand( _pd.getDeath(i) );
 			}
 		}
-		simp = curr.getPersistentSimplification();
+		simp = curr.getSimplificationLevel();
 		splinePoints.add( new Float2(0,0) );
 		splinePoints.add( new Float2(getWidth(), getHeight()) );
 	}
@@ -214,7 +214,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 			simp = ( mouseY + mouseX-winX.start() - winY.end() - 5 )*(float)bd_range.getRange()/( winY.start() - winY.end() + 10 );
 			simp = MathX.clamp( simp, 0, (float)bd_range.getMaximum() );
 			for( TopoTree _pd : pd ){
-				_pd.setPersistentSimplification( simp );
+				_pd.setSimplificationLevel( simp );
 			}
 			return true;
 		}

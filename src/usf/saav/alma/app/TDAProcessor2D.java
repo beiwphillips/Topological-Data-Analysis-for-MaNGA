@@ -64,7 +64,7 @@ public class TDAProcessor2D extends BasicObject {
 		System.out.println( "Regional Maximum Persistence: " + ct.getMaxPersistence() );
 
 		this.print_info_message("Simplifying Tree");
-		ct.setPersistentSimplification( simplification );
+		ct.setSimplificationLevel( simplification );
 		ct.setSimplificationMetric( metric );
 		this.print_info_message("Simplfying Field");
 		ps2d = new PersistenceSimplifier2D( slice, ct, cl, true );

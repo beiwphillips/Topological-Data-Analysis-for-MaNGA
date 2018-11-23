@@ -77,9 +77,9 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	}
 
 	
-	public void setPersistentSimplification( float threshold ){ simplify = threshold; }
+	public void setSimplificationLevel( float threshold ){ simplify = threshold; }
 	public void setSimplificationMetric( String metric ){ this.metric = metric; }
-	public float getPersistentSimplification( ){ return simplify; }
+	public float getSimplificationLevel( ){ return simplify; }
 	public String getSimplificationMetric( ){ return metric; }
 	
 	public float getMaxPersistence(){ return persistence_max; }

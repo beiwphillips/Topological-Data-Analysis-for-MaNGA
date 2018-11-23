@@ -49,12 +49,12 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	@Override public float getMaxPersistence(){ return max_persistence; }
 	
 	@Override 
-	public void setPersistentSimplification( float threshold ){
+	public void setSimplificationLevel( float threshold ){
 		simplify = threshold;
 	}
 
 	@Override
-	public float getPersistentSimplification( ){
+	public float getSimplificationLevel( ){
 		return simplify;
 	}
 
