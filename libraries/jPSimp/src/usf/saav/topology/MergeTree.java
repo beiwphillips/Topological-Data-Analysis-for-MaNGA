@@ -40,25 +40,25 @@ public class MergeTree extends AugmentedJoinTree  {
 
 
 	@Override
-	protected AugmentedJoinTreeNode createTreeNode(int loc, float val) {
-		return new MergeTreeNode(loc,val);
+	protected AugmentedJoinTreeNode createTreeNode(int loc, float val, int size) {
+		return new MergeTreeNode(loc,val,size);
 	}
 
 	@Override
-	protected AugmentedJoinTreeNode createTreeNode(int loc, float val, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1) {
-		return new MergeTreeNode(loc,val,c0,c1);
+	protected AugmentedJoinTreeNode createTreeNode(int loc, float val, int size, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1) {
+		return new MergeTreeNode(loc,val,size,c0,c1);
 	}
 	
 	
 	
 	public class MergeTreeNode extends AugmentedJoinTreeNode {
 		
-		public MergeTreeNode( int loc, float val ){
-			super(loc,val); 
+		public MergeTreeNode( int loc, float val, int size ){
+			super(loc,val,size); 
 		}
 		
-		public MergeTreeNode( int loc, float val, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
-			super(loc,val,c0,c1);
+		public MergeTreeNode( int loc, float val, int size, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
+			super(loc,val,size,c0,c1);
 		}
 		
 		public NodeType getType() {

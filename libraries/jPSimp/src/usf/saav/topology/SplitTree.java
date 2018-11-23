@@ -38,25 +38,25 @@ public class SplitTree extends AugmentedJoinTree {
 	 
 
 	@Override
-	protected AugmentedJoinTreeNode createTreeNode(int loc, float val) {
-		return new SplitTreeNode(loc,val);
+	protected AugmentedJoinTreeNode createTreeNode(int loc, float val, int size) {
+		return new SplitTreeNode(loc,val,size);
 	}
 
 
 
 	@Override
-	protected AugmentedJoinTreeNode createTreeNode(int loc, float val, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1) {
-		return new SplitTreeNode(loc,val,c0,c1);
+	protected AugmentedJoinTreeNode createTreeNode(int loc, float val, int size, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1) {
+		return new SplitTreeNode(loc,val,size,c0,c1);
 	}
 	
 	public class SplitTreeNode extends AugmentedJoinTreeNode {
 
-		public SplitTreeNode( int loc, float val ){
-			super(loc,val);
+		public SplitTreeNode( int loc, float val, int size ){
+			super(loc,val,size);
 		}
 		
-		public SplitTreeNode( int loc, float val, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
-			super(loc,val,c0,c1);
+		public SplitTreeNode( int loc, float val, int size, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
+			super(loc,val,size,c0,c1);
 		}
 		
 		public NodeType getType() {
