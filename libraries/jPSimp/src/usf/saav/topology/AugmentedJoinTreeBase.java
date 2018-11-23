@@ -13,6 +13,7 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	protected Vector<JoinTreeNode> nodes = new Vector<JoinTreeNode>();
 	protected float				   simplify = 0.0f;
 	protected float				   max_persistence = 0.0f;
+	protected String                metric = "persistence";
 	
 	
 	protected AugmentedJoinTreeBase( ){ }
@@ -50,12 +51,22 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	
 	@Override 
 	public void setSimplificationLevel( float threshold ){
-		simplify = threshold;
+		this.simplify = threshold;
+	}
+	
+	@Override
+	public void setSimplificationMetric( String metric ) {
+	    this.metric = metric;
 	}
 
 	@Override
 	public float getSimplificationLevel( ){
 		return simplify;
+	}
+	
+	@Override
+	public String getSimplificationMetric( ) {
+	    return metric;
 	}
 
 	@Override

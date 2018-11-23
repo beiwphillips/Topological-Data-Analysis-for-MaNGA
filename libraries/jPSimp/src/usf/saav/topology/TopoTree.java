@@ -22,7 +22,9 @@ package usf.saav.topology;
 public interface TopoTree {
 	
 	void  setSimplificationLevel( float threshold );
+	void  setSimplificationMetric( String metric );
 	float getSimplificationLevel( );
+	String getSimplificationMetric( );
 	
 	boolean isActive(int i);
 	
