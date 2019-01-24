@@ -33,6 +33,7 @@ public interface TopoTree {
 	float getBirth(int i);
 	float getDeath(int i);
 	float getPersistence(int i);
+	int getSize(int i);
 	
 	TopoTreeNode getNode( int i );
 	
