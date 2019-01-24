@@ -64,6 +64,7 @@ public class CmdlineParser {
 			}
 			if( arg.startsWith("metric=") ){
 			    exec.metric = arg.substring(7);
+			    continue;
 			}
 			if( arg.startsWith("output=") ){
 				exec.output = arg.substring(7);
