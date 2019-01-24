@@ -29,6 +29,7 @@ import java.util.Vector;
 import usf.saav.common.monitoredvariables.Callback;
 import usf.saav.mesh.Mesh;
 import usf.saav.mesh.Mesh.Vertex;
+import usf.saav.topology.JoinTreeNode;
 import usf.saav.topology.TopoTree;
 import usf.saav.topology.TopoTreeNode;
 import usf.saav.topology.TopoTreeNode.NodeType;
@@ -99,8 +100,11 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 				}
 			}
 		}
-
-		workList.sort( new TopoTreeNode.ComparePersistenceAscending() );
+		
+		if (ct.getSimplificationMetric().equals("persistence"))
+		    workList.sort( new TopoTreeNode.ComparePersistenceAscending() );
+		else if (ct.getSimplificationMetric().equals("size"))
+		    workList.sort( new TopoTreeNode.CompareSizeAscending() );
 
 		for( int i = 0; i < workList.size(); i++ ){
 			TopoTreeNode n = workList.get(i);
