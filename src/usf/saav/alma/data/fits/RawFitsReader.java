@@ -153,12 +153,13 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 			if( header instanceof ImageHDU ){
 
 				ImageHDU img = (ImageHDU)header;
+				
+				if ((img.getHeader().getStringValue("EXTNAME") == null) || 
+				        ("FLUX").equals(img.getHeader().getStringValue("EXTNAME")))
+				    readingFLUX(img);
 
 				if( ("MASK").equals(img.getHeader().getStringValue("EXTNAME")) )
 				    readingMASK(img);
-				
-				if( ("FLUX").equals(img.getHeader().getStringValue("EXTNAME")) )
-				    readingFLUX(img);
 				
 			}
 			else if ( header instanceof BinaryTableHDU ){
