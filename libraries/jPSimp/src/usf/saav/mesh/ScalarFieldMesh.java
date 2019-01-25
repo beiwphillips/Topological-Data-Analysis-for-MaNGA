@@ -51,6 +51,7 @@ public class ScalarFieldMesh extends Mesh {
 	public ScalarFieldMesh( ScalarFieldND sf ){
 		this.sf = sf;
 		for(int i = 0; i < sf.getSize(); i++ ){
+		    System.out.println(sf.getValue(i));
 		    boolean isValid = true;
 		    if (Float.isNaN(sf.getValue(i))) {
 //		        System.out.println("ISNAN");
@@ -60,6 +61,10 @@ public class ScalarFieldMesh extends Mesh {
 //		        System.out.println("ISZERO");
 		        isValid = false;
 		    }
+		    if (sf.getValue(i) == Float.POSITIVE_INFINITY || sf.getValue(i) == Float.NEGATIVE_INFINITY) {
+//		        System.out.println("ISINFINITY");
+		        isValid = false;
+		    }
 			if( !isValid )
 				elemID.put( i, -1 );
 			else {
@@ -67,6 +72,12 @@ public class ScalarFieldMesh extends Mesh {
 				add( new ScalarFieldVertex(i) );
 			}
 		}
+		try {
+            throw new Exception();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 	
     @Override
