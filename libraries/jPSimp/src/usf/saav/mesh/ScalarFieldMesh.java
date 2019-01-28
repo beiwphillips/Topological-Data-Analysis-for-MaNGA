@@ -51,7 +51,6 @@ public class ScalarFieldMesh extends Mesh {
 	public ScalarFieldMesh( ScalarFieldND sf ){
 		this.sf = sf;
 		for(int i = 0; i < sf.getSize(); i++ ){
-		    System.out.println(sf.getValue(i));
 		    boolean isValid = true;
 		    if (Float.isNaN(sf.getValue(i))) {
 //		        System.out.println("ISNAN");
