@@ -133,19 +133,19 @@ public class JoinTree implements Runnable {
 
 		private int position;
 		private float value;
-		private int size;
+		private int volumn;
 
 		
 		public Node( float value, int position, int size ) {
 			this.position = position;
 			this.value = value;
-			this.size = size;
+			this.volumn = size;
 		}
 
 
 		@Override public float getValue( ){ return value; }
 		@Override public int   getPosition( ){ return position; }
-		@Override public int   getSize( ){ return size; }
+		@Override public int   getVolumn( ){ return volumn; }
 
 		@Override public NodeType getType() { return NodeType.UNKNOWN; }
 		

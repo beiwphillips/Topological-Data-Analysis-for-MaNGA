@@ -104,7 +104,7 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 		if (ct.getSimplificationMetric().equals("persistence"))
 		    workList.sort( new TopoTreeNode.ComparePersistenceAscending() );
 		else if (ct.getSimplificationMetric().equals("size"))
-		    workList.sort( new TopoTreeNode.CompareSizeAscending() );
+		    workList.sort( new TopoTreeNode.CompareVolumnAscending() );
 
 		for( int i = 0; i < workList.size(); i++ ){
 			TopoTreeNode n = workList.get(i);

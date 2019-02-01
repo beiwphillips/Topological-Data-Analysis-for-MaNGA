@@ -98,8 +98,8 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 		return nodes.get(i);
 	}
 	
-	public int getSize(int i) {
-	    return nodes.get(i).getSize();
+	public int getVolumn(int i) {
+	    return nodes.get(i).getVolumn();
 	}
 	
 }

@@ -71,7 +71,7 @@ public abstract class JoinTreeNode implements TopoTreeNode {
 	
 	public abstract float getValue( );
 	public abstract int   getPosition( );
-	public abstract int   getSize();
+	public abstract int   getVolumn();
 
 	@Override public String toString(){
 		StringBuffer bf = new StringBuffer( );

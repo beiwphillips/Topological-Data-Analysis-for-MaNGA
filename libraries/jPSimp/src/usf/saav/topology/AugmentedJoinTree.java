@@ -62,13 +62,13 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	}
 	
 	protected  AugmentedJoinTreeNode processTreeV2(JoinTreeNode current) {
-	    int cumulatedSize = current.getSize();
+	    int cumulatedVolumn = current.getVolumn();
 	    while (current.childCount() == 1) {
 	        current = current.getChild(0);
-	        cumulatedSize += current.getSize();
+	        cumulatedVolumn += current.getVolumn();
 	    }
 	    if (current.childCount() == 0) {
-	        nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedSize));
+	        nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn));
 	        return (AugmentedJoinTreeNode)nodes.lastElement();
 	    } else {
 	        AugmentedJoinTreeNode prev = processTreeV2(current.getChild(0));
@@ -76,21 +76,21 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	        while(i < current.childCount()) {
 	            AugmentedJoinTreeNode newChild = processTreeV2(current.getChild(i));
 	            prev = createTreeNode(current.getPosition(), current.getValue(), 
-	                                  prev.getSize() + newChild.getSize(), prev, newChild);
+	                                  prev.getVolumn() + newChild.getVolumn(), prev, newChild);
 	            nodes.add(prev);
 	            i++;
 	        }
-	        prev.size += cumulatedSize;
+	        prev.volumn += cumulatedVolumn;
 	        return prev;
 	    }
 	}
 	
 	protected AugmentedJoinTreeNode processTree( JoinTreeNode current ){
 	    
-	    int cumulatedSize = current.getSize();
+	    int cumulatedSize = current.getVolumn();
 		while( current.childCount() == 1 ){
 			current = current.getChild(0);
-			cumulatedSize += current.getSize();
+			cumulatedSize += current.getVolumn();
 		}
 		if( current.childCount() == 0 ){
 			nodes.add( createTreeNode( current.getPosition(), current.getValue(), cumulatedSize ) );
@@ -100,7 +100,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		    AugmentedJoinTreeNode child0 = processTree(current.getChild(0));
 		    AugmentedJoinTreeNode child1 = processTree(current.getChild(1));
 			nodes.add( createTreeNode( current.getPosition(), current.getValue(), 
-			                           child0.getSize() + child1.getSize() + cumulatedSize, 
+			                           child0.getVolumn() + child1.getVolumn() + cumulatedSize, 
 			                           child0, child1 ) );
 			return (AugmentedJoinTreeNode)nodes.lastElement();
 		}
@@ -111,10 +111,10 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		    AugmentedJoinTreeNode child2 = processTree(current.getChild(2));
 		    
 			AugmentedJoinTreeNode child01 = createTreeNode( current.getPosition(), current.getValue(), 
-			                                                child0.getSize() + child1.getSize(), 
+			                                                child0.getVolumn() + child1.getVolumn(), 
 			                                                child0, child1 );
 			AugmentedJoinTreeNode parent = createTreeNode( current.getPosition(), current.getValue(),
-			                                               child01.getSize() + child2.getSize() + cumulatedSize, 
+			                                               child01.getVolumn() + child2.getVolumn() + cumulatedSize, 
 			                                               child01, child2 );
 			nodes.add(child01);
 			nodes.add(parent);
@@ -129,13 +129,13 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		    AugmentedJoinTreeNode child3 = processTree(current.getChild(3));
 		    
 			AugmentedJoinTreeNode child01 = createTreeNode( current.getPosition(), current.getValue(),
-			                                                child0.getSize() + child1.getSize(), 
+			                                                child0.getVolumn() + child1.getVolumn(), 
 			                                                child0, child1 );
 			AugmentedJoinTreeNode child012 = createTreeNode( current.getPosition(), current.getValue(),
-			                                                 child01.getSize() + child2.getSize(), 
+			                                                 child01.getVolumn() + child2.getVolumn(), 
 			                                                 child01, child2 );
 			AugmentedJoinTreeNode parent = createTreeNode( current.getPosition(), current.getValue(),
-			                                               child012.getSize() + child3.getSize() + cumulatedSize, 
+			                                               child012.getVolumn() + child3.getVolumn() + cumulatedSize, 
 			                                               child012, child3 );
 
 			nodes.add(child01);
@@ -211,19 +211,19 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		
 		private int location;
 		private float value;
-		private int size;
+		private int volumn;
 		
 		
-		protected AugmentedJoinTreeNode( int loc, float val, int size ){
+		protected AugmentedJoinTreeNode( int loc, float val, int volumn ){
 			this.location = loc;
 			this.value = val;
-			this.size = size;
+			this.volumn = volumn;
 		}
 		
-		protected AugmentedJoinTreeNode( int loc, float val, int size, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
+		protected AugmentedJoinTreeNode( int loc, float val, int volumn, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
 			this.location = loc;
 			this.value = val;
-			this.size = size;
+			this.volumn = volumn;
 			this.addChild(c0);
 			this.addChild(c1);
 		}
@@ -231,12 +231,12 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		
 		@Override public int	getPosition() { return location; }
 		@Override public float getValue() { return value; }
-		@Override public int getSize() { return size; }
+		@Override public int getVolumn() { return volumn; }
 
 	}
 	
-	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, int size );
-	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, int size, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 );
+	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, int volumn );
+	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, int volumn, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 );
 
 	
 
