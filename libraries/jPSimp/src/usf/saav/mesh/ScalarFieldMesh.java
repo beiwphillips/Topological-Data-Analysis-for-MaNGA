@@ -71,12 +71,6 @@ public class ScalarFieldMesh extends Mesh {
 				add( new ScalarFieldVertex(i) );
 			}
 		}
-		try {
-            throw new Exception();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 	}
 	
     @Override
