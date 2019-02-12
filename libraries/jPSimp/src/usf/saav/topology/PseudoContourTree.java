@@ -33,7 +33,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	private SplitTree st;
 	private AugmentedJoinTreeNode global_min;
 	private AugmentedJoinTreeNode global_max;
-	private float persistence_max = 0;
+	private float max_persistence = 0;
 	private float simplify = 0.0f;
 	private int total_volumn = 0;
 	private String metric = "persistence";
@@ -62,7 +62,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 			e.printStackTrace();
 		}
 		
-		persistence_max = Math.max( mt.getMaxPersistence(), st.getMaxPersistence() );
+		max_persistence = Math.max( mt.getMaxPersistence(), st.getMaxPersistence() );
 		total_volumn = sf.getSize();
 		global_min = mt.getGlobalExtreme();
 		global_max = st.getGlobalExtreme();
@@ -82,7 +82,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	public float getSimplificationLevel( ){ return simplify; }
 	public String getSimplificationMetric( ){ return metric; }
 	
-	public float getMaxPersistence(){ return persistence_max; }
+	public float getMaxPersistence(){ return max_persistence; }
 	public int getTotalVolumn(){ return total_volumn; }
 	public AugmentedJoinTreeNode getGlobalMin(){ return global_min; }
 	public AugmentedJoinTreeNode getGlobalMax(){ return global_max; }
@@ -119,12 +119,11 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 		return st.getNode(i-mt.size());
 	}
 	
-	public boolean isActive(int i){
+	public boolean isActive(int i) {
 	    if (metric.equals("persistence"))
-	        return getPersistence(i) > simplify * persistence_max;
-	    else if (metric.equals("volumn")) {
+	        return getPersistence(i) > simplify * max_persistence;
+	    else if (metric.equals("volumn"))
 	        return getVolumn(i) > simplify * total_volumn;
-	    }
         return false;
 	}
     
