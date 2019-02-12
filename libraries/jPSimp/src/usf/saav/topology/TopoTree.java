@@ -27,6 +27,7 @@ public interface TopoTree {
 	String getSimplificationMetric( );
 	
 	boolean isActive(int i);
+    boolean isPruning(int i);
 	
 	int size();
 	

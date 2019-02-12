@@ -133,7 +133,13 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	        return getVolumn(i) > simplify * total_volumn;
         return false;
 	}
-    
+       
+    public boolean isPruning(int i) {
+        if (metric.equals("persistence"))
+            return getSimplePersistence(i) <= simplify * max_persistence;
+        return false;
+    }
+	
 	public int getVolumn(int i) {
 	    if (i < mt.size())
 	        return mt.getVolumn(i);
