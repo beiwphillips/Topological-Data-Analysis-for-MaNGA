@@ -32,31 +32,55 @@ public interface TopoTreeNode {
 	NodeType getType();
 
 	TopoTreeNode getPartner();
+	TopoTreeNode getParent();
+
+	boolean hasParent();
 
 	int getPosition();
 
 	float getBirth();
 	float getDeath();
 	float getPersistence();
-
+	float getSimplePersistence();
+    float getValue();
 	int getVolumn();
 	
-	
-	public static class ComparePersistenceAscending implements Comparator<TopoTreeNode> {
-		@Override public int compare(TopoTreeNode o1, TopoTreeNode o2) {
-			if( o1.getPersistence() > o2.getPersistence() ) return  1;
-			if( o1.getPersistence() < o2.getPersistence() ) return -1;
-			return 0;
-		}
-	}
 
-	public static class ComparePersistenceDescending implements Comparator<TopoTreeNode> {
-		@Override public int compare(TopoTreeNode o1, TopoTreeNode o2) {
-			if( o1.getPersistence() < o2.getPersistence() ) return  1;
-			if( o1.getPersistence() > o2.getPersistence() ) return -1;
-			return 0;
-		}
-	}
+	
+	
+    public static class ComparePersistenceAscending implements Comparator<TopoTreeNode> {
+        @Override public int compare(TopoTreeNode o1, TopoTreeNode o2) {
+            if( o1.getPersistence() > o2.getPersistence() ) return  1;
+            if( o1.getPersistence() < o2.getPersistence() ) return -1;
+            return 0;
+        }
+    }
+
+    public static class ComparePersistenceDescending implements Comparator<TopoTreeNode> {
+        @Override public int compare(TopoTreeNode o1, TopoTreeNode o2) {
+            if( o1.getPersistence() < o2.getPersistence() ) return  1;
+            if( o1.getPersistence() > o2.getPersistence() ) return -1;
+            return 0;
+        }
+    }
+    
+    
+    public static class CompareSimplePersistenceAscending implements Comparator<TopoTreeNode> {
+        @Override public int compare(TopoTreeNode o1, TopoTreeNode o2) {
+            if( o1.getSimplePersistence() > o2.getSimplePersistence() ) return  1;
+            if( o1.getSimplePersistence() < o2.getSimplePersistence() ) return -1;
+            return 0;
+        }
+    }
+    
+    public static class CompareSimplePersistenceDescending implements Comparator<TopoTreeNode> {
+        @Override public int compare(TopoTreeNode o1, TopoTreeNode o2) {
+            if( o1.getSimplePersistence() < o2.getSimplePersistence() ) return  1;
+            if( o1.getSimplePersistence() > o2.getSimplePersistence() ) return -1;
+            return 0;
+        }
+    }
+    
 
 	public static class CompareVolumnAscending implements Comparator<TopoTreeNode> {
         @Override

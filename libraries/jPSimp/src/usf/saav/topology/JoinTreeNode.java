@@ -50,6 +50,10 @@ public abstract class JoinTreeNode implements TopoTreeNode {
 	public void setPartner( JoinTreeNode jtn ) { partner = jtn; }
 	@Override public TopoTreeNode getPartner() { return partner; }
 	
+    public void setParent( JoinTreeNode p ){ parent = p; }
+    @Override public TopoTreeNode getParent( ){ return parent; }
+    @Override public boolean hasParent() { return parent != null; }
+	
 	@Override public float getBirth() { 
 		if( partner == null ) return 0;
 		return Math.min( getValue(), partner.getValue() );
@@ -62,12 +66,10 @@ public abstract class JoinTreeNode implements TopoTreeNode {
 		if( partner == null ) return Float.NaN;
 		return Math.abs( getValue()-partner.getValue() );
 	}
-
-	
-	public void			setParent( JoinTreeNode p ){ 	parent = p;				}
-	public JoinTreeNode	getParent( ){					return parent;			}
-	public boolean		hasParent() {					return parent != null;	}
-
+	@Override public float getSimplePersistence() {
+	    if( parent == null) return Float.NaN;
+	    return Math.abs( getValue()-parent.getValue());
+	}
 	
 	public abstract float getValue( );
 	public abstract int   getPosition( );

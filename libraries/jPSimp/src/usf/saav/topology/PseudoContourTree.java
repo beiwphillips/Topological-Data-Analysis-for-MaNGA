@@ -112,6 +112,13 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 			return mt.getPersistence(i);
 		return st.getPersistence(i-mt.size());
 	}
+	
+	@Override
+	public float getSimplePersistence(int i) {
+	    if ( i < mt.size() )
+	        return mt.getSimplePersistence(i);
+	    return st.getSimplePersistence(i);
+	}
 
 	public TopoTreeNode getNode(int i) {
 		if( i < mt.size() )

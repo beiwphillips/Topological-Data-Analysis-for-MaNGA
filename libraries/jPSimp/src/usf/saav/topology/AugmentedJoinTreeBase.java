@@ -93,6 +93,11 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	public float getPersistence(int i) {
 		return nodes.get(i).getPersistence();
 	}
+	
+	@Override
+	public float getSimplePersistence(int i) {
+	    return nodes.get(i).getSimplePersistence();
+	}
 
 	public TopoTreeNode getNode(int i) {
 		return nodes.get(i);
