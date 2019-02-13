@@ -42,7 +42,7 @@ public interface ScalarFieldND {
 			int nanCnt = 0;
 			for(int i = 0; i < sf.getSize(); i++){
 				double v = sf.getValue(i);
-				if( Double.isNaN(v) ) nanCnt++;
+				if( Double.isNaN(v) || Double.isInfinite(v) ) nanCnt++;
 				else{
 					min = Math.min(min, v);
 					max = Math.max(max, v);
@@ -50,6 +50,7 @@ public interface ScalarFieldND {
 			}
 			return new double[]{min,max};
 		}
+		
 		public double [] getValueRange(){
 			double min =  Double.MAX_VALUE;
 			double max = -Double.MAX_VALUE;
@@ -57,13 +58,24 @@ public interface ScalarFieldND {
 			int nanCnt = 0;
 			for(int i = 0; i < getSize(); i++){
 				double v = getValue(i);
-				if( Double.isNaN(v) ) nanCnt++;
+				if( Double.isNaN(v) || Double.isInfinite(v) ) nanCnt++;
 				else{
 					min = Math.min(min, v);
 					max = Math.max(max, v);
 				}
 			}
 			return new double[]{min,max};
+		}
+		
+		public static boolean isValidField(ScalarFieldND sf) {
+		    int validCount = 0;
+		    for (int i = 0; i < sf.getSize(); i++) {
+		        double v = sf.getValue(i);
+		        if (Double.isNaN(v) || Double.isInfinite(v) || v == 0)
+		            continue;
+		        validCount++;
+		    }
+		    return validCount > 0;
 		}
 		
 		public static void saveField(ScalarFieldND sf, String filename) throws IOException {

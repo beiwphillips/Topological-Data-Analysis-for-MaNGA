@@ -77,8 +77,7 @@ public class TDAExec {
 			for(int d = 0; d < fits.getAxesSize()[2].length(); d++ ){
 				
 				ScalarField2D writeslice = fits.getSlice(d, 0);
-				double[] valueRange = ScalarFieldND.Default.getValueRange(writeslice);
-				if (valueRange[0] == 0 && valueRange[1] == 0) {
+				if (!ScalarFieldND.Default.isValidField(writeslice)) {
 				    fw.writeSlice(writeslice);
 				    continue;
 				}
