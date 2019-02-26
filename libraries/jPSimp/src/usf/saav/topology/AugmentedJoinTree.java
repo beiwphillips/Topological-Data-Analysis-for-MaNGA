@@ -61,29 +61,50 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		print_info_message( "Building tree complete" );
 	}
 	
-	protected  AugmentedJoinTreeNode processTree(JoinTreeNode current) {
-	    int cumulatedVolumn = current.getVolumn();
-	    while (current.childCount() == 1) {
-	        current = current.getChild(0);
-	        cumulatedVolumn += current.getVolumn();
-	    }
-	    if (current.childCount() == 0) {
-	        nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn));
-	        return (AugmentedJoinTreeNode)nodes.lastElement();
-	    } else {
-	        AugmentedJoinTreeNode prev = processTree(current.getChild(0));
-	        int i = 1;
-	        while(i < current.childCount()) {
-	            AugmentedJoinTreeNode newChild = processTree(current.getChild(i));
-	            prev = createTreeNode(current.getPosition(), current.getValue(), 
-	                                  prev.getVolumn() + newChild.getVolumn(), prev, newChild);
-	            nodes.add(prev);
-	            i++;
-	        }
-	        prev.volumn += cumulatedVolumn;
-	        return prev;
-	    }
-	}
+    protected  AugmentedJoinTreeNode processTree(JoinTreeNode current) {
+        int cumulatedVolumn = current.getVolumn();
+        while (current.childCount() == 1) {
+            current = current.getChild(0);
+            cumulatedVolumn += current.getVolumn();
+        }
+        if (current.childCount() == 0) {
+            nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn));
+            return (AugmentedJoinTreeNode)nodes.lastElement();
+        } else {
+            AugmentedJoinTreeNode prev = processTree(current.getChild(0));
+            int i = 1;
+            while(i < current.childCount()) {
+                AugmentedJoinTreeNode newChild = processTree(current.getChild(i));
+                prev = createTreeNode(current.getPosition(), current.getValue(), 
+                                      prev.getVolumn() + newChild.getVolumn(), prev, newChild);
+                nodes.add(prev);
+                i++;
+            }
+            prev.volumn += cumulatedVolumn;
+            return prev;
+        }
+    }
+	
+    protected AugmentedJoinTreeNode simpleProcessTree(JoinTreeNode current) {
+        int cumulatedVolumn = current.getVolumn();
+        while (current.childCount() == 1) {
+            current = current.getChild(0);
+            cumulatedVolumn += current.getVolumn();
+        }
+        if (current.childCount() == 0) {
+            nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn));
+            return (AugmentedJoinTreeNode)nodes.lastElement();
+        } else {
+            AugmentedJoinTreeNode tmp = createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn);
+            for (int i = 0; i < current.childCount(); i++) {
+                AugmentedJoinTreeNode newChild = processTree(current.getChild(i));
+                tmp.addChild(newChild);
+                tmp.volumn += newChild.volumn;
+            }
+            nodes.add(tmp);
+            return tmp;
+        }
+    }
 
     protected void calculatePersistence(){
         print_info_message( "Finding Persistence");
