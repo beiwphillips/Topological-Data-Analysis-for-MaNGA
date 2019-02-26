@@ -48,7 +48,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		JoinTree jt = new JoinTree( cl, comparator );
 		jt.run();
 
-		head = processTreeV2( jt.getRoot() );
+		head = processTree( jt.getRoot() );
 		
 		calculatePersistence();
 		
@@ -61,7 +61,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		print_info_message( "Building tree complete" );
 	}
 	
-	protected  AugmentedJoinTreeNode processTreeV2(JoinTreeNode current) {
+	protected  AugmentedJoinTreeNode processTree(JoinTreeNode current) {
 	    int cumulatedVolumn = current.getVolumn();
 	    while (current.childCount() == 1) {
 	        current = current.getChild(0);
@@ -71,10 +71,10 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	        nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn));
 	        return (AugmentedJoinTreeNode)nodes.lastElement();
 	    } else {
-	        AugmentedJoinTreeNode prev = processTreeV2(current.getChild(0));
+	        AugmentedJoinTreeNode prev = processTree(current.getChild(0));
 	        int i = 1;
 	        while(i < current.childCount()) {
-	            AugmentedJoinTreeNode newChild = processTreeV2(current.getChild(i));
+	            AugmentedJoinTreeNode newChild = processTree(current.getChild(i));
 	            prev = createTreeNode(current.getPosition(), current.getValue(), 
 	                                  prev.getVolumn() + newChild.getVolumn(), prev, newChild);
 	            nodes.add(prev);
@@ -84,71 +84,6 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	        return prev;
 	    }
 	}
-	
-	protected AugmentedJoinTreeNode processTree( JoinTreeNode current ){
-	    
-	    int cumulatedSize = current.getVolumn();
-		while( current.childCount() == 1 ){
-			current = current.getChild(0);
-			cumulatedSize += current.getVolumn();
-		}
-		if( current.childCount() == 0 ){
-			nodes.add( createTreeNode( current.getPosition(), current.getValue(), cumulatedSize ) );
-			return (AugmentedJoinTreeNode)nodes.lastElement();
-		}
-		if( current.childCount() == 2 ){
-		    AugmentedJoinTreeNode child0 = processTree(current.getChild(0));
-		    AugmentedJoinTreeNode child1 = processTree(current.getChild(1));
-			nodes.add( createTreeNode( current.getPosition(), current.getValue(), 
-			                           child0.getVolumn() + child1.getVolumn() + cumulatedSize, 
-			                           child0, child1 ) );
-			return (AugmentedJoinTreeNode)nodes.lastElement();
-		}
-		// Monkey saddle --- should probably do something a little smarter here
-		if( current.childCount() == 3 ){
-		    AugmentedJoinTreeNode child0 = processTree(current.getChild(0));
-		    AugmentedJoinTreeNode child1 = processTree(current.getChild(1));
-		    AugmentedJoinTreeNode child2 = processTree(current.getChild(2));
-		    
-			AugmentedJoinTreeNode child01 = createTreeNode( current.getPosition(), current.getValue(), 
-			                                                child0.getVolumn() + child1.getVolumn(), 
-			                                                child0, child1 );
-			AugmentedJoinTreeNode parent = createTreeNode( current.getPosition(), current.getValue(),
-			                                               child01.getVolumn() + child2.getVolumn() + cumulatedSize, 
-			                                               child01, child2 );
-			nodes.add(child01);
-			nodes.add(parent);
-			
-			return parent;
-		}
-		// 4-way saddle --- yicks!
-		if( current.childCount() == 4 ){
-		    AugmentedJoinTreeNode child0 = processTree(current.getChild(0));
-		    AugmentedJoinTreeNode child1 = processTree(current.getChild(1));
-		    AugmentedJoinTreeNode child2 = processTree(current.getChild(2));
-		    AugmentedJoinTreeNode child3 = processTree(current.getChild(3));
-		    
-			AugmentedJoinTreeNode child01 = createTreeNode( current.getPosition(), current.getValue(),
-			                                                child0.getVolumn() + child1.getVolumn(), 
-			                                                child0, child1 );
-			AugmentedJoinTreeNode child012 = createTreeNode( current.getPosition(), current.getValue(),
-			                                                 child01.getVolumn() + child2.getVolumn(), 
-			                                                 child01, child2 );
-			AugmentedJoinTreeNode parent = createTreeNode( current.getPosition(), current.getValue(),
-			                                               child012.getVolumn() + child3.getVolumn() + cumulatedSize, 
-			                                               child012, child3 );
-
-			nodes.add(child01);
-			nodes.add(child012);
-			nodes.add(parent);
-			
-			return parent;
-		}
-		
-		print_warning_message( "Error, split with " + current.childCount() + " children" );
-		return null;
-	}
-	
 
     protected void calculatePersistence(){
         print_info_message( "Finding Persistence");
