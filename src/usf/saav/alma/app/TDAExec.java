@@ -83,7 +83,7 @@ public class TDAExec {
 				}
 				if( (treedim == TreeDimension.DIM_2D || treedim == TreeDimension.DIM_2D_STACK) && zr.inRange(d) ){
 					sliceProc.process(fits, xr, yr, d, simplification, metric);
-					writeslice = new Composite2D(writeslice, sliceProc.ps2d, xr.start(), yr.start() );
+					writeslice = new Composite2D(writeslice, sliceProc.s2d, xr.start(), yr.start() );
 				}
 				if( treedim == TreeDimension.DIM_3D && zr.inRange(d) ){
 					ScalarField2D modslice = new Extract2DFrom3D( volProc.ps3d, d-zr.start() );

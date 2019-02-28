@@ -29,11 +29,13 @@ import usf.saav.mesh.ConnectedComponentMesh;
 import usf.saav.mesh.ScalarFieldMesh;
 import usf.saav.scalarfield.PersistenceSimplifier2D;
 import usf.saav.scalarfield.ScalarField2D;
+import usf.saav.scalarfield.Simplifier2D;
 import usf.saav.topology.PseudoContourTree;
 
 public class TDAProcessor2D extends BasicObject {
 
-	PersistenceSimplifier2D ps2d;
+//	PersistenceSimplifier2D ps2d;
+	Simplifier2D s2d;
 	ScalarField2D slice;
 
 	public TDAProcessor2D( ){
@@ -67,7 +69,8 @@ public class TDAProcessor2D extends BasicObject {
 		ct.setSimplificationLevel( simplification );
 		ct.setSimplificationMetric( metric );
 		this.print_info_message("Simplfying Field");
-		ps2d = new PersistenceSimplifier2D( slice, ct, cl, true );
+//		ps2d = new PersistenceSimplifier2D( slice, ct, cl, true );
+		s2d = new Simplifier2D(slice, ct, cl, true);
 
 	}
 
