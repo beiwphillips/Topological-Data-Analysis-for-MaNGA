@@ -19,7 +19,9 @@
  */
 package usf.saav.topology;
  
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 
 public interface TopoTreeNode {
 
@@ -30,10 +32,21 @@ public interface TopoTreeNode {
 	
 	
 	NodeType getType();
+	
+	public void addChild( JoinTreeNode c );
+	public void addChildren(Collection<JoinTreeNode> c);
+    public JoinTreeNode getChild( int idx );
+    public List<JoinTreeNode> getChildren();
+    public int getChildCount();
+    public boolean isChild(JoinTreeNode node);
+    public int childCount();
+    public boolean hasChildren();
+    public void removeChild(JoinTreeNode node);
 
+	void setPartner(JoinTreeNode jtn);
 	TopoTreeNode getPartner();
+	void setParent(JoinTreeNode p);
 	TopoTreeNode getParent();
-
 	boolean hasParent();
 
 	int getPosition();

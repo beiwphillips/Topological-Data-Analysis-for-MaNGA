@@ -37,20 +37,20 @@ public abstract class JoinTreeNode implements TopoTreeNode {
 	protected JoinTreeNode partner = null;
 
 	
-	public void 				addChild( JoinTreeNode c ){				  children.add(c); 					}
-	public void 				addChildren(Collection<JoinTreeNode> c) { children.addAll(c);				}
-	public JoinTreeNode 		getChild( int idx ){					  return children.get(idx); 		}
-	public List<JoinTreeNode>	getChildren( ){ 						  return children; 					}
-	public int					getChildCount( ){ 						  return children.size(); 			}
-	public boolean 				isChild(JoinTreeNode node){				  return children.contains(node);	}
-	public int 					childCount(){ 							  return children.size(); 			}
-	public boolean 				hasChildren( ){							  return children.size() != 0; 		}
-	public void 				removeChild(JoinTreeNode node){			  children.remove(node);			}
+    @Override public void addChild( JoinTreeNode c ){	 children.add(c); }
+    @Override public void addChildren(Collection<JoinTreeNode> c){ children.addAll(c); }
+    @Override public JoinTreeNode getChild( int idx ){ return children.get(idx); }
+    @Override public List<JoinTreeNode> getChildren( ){ return children; }
+    @Override public int getChildCount( ){ return children.size(); }
+    @Override public boolean isChild(JoinTreeNode node){ return children.contains(node); }
+    @Override public int childCount( ){ return children.size(); }
+    @Override public boolean hasChildren( ){ return children.size() != 0; }
+    @Override public void removeChild(JoinTreeNode node){ children.remove(node); }
 
-	public void setPartner( JoinTreeNode jtn ) { partner = jtn; }
-	@Override public TopoTreeNode getPartner() { return partner; }
-	
-    public void setParent( JoinTreeNode p ){ parent = p; }
+    @Override public void setPartner( JoinTreeNode jtn ) { partner = jtn; }
+    @Override public TopoTreeNode getPartner() { return partner; }
+    
+    @Override public void setParent( JoinTreeNode p ){ parent = p; }
     @Override public TopoTreeNode getParent( ){ return parent; }
     @Override public boolean hasParent() { return parent != null; }
 	
