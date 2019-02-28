@@ -92,11 +92,11 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 			if( !ct.isActive(i) ){
 				TopoTreeNode n = ct.getNode(i);
 				switch( n.getType() ){
-					case LEAF_MAX: workList.add(n); break;
-					case LEAF_MIN: workList.add(n); break;
-					case MERGE:    break;
-					case SPLIT:    break;
-					case UNKNOWN:  break;
+					case LEAF_MAX:
+					case LEAF_MIN: 
+					    workList.add(n); break;
+					default:
+					    break;
 				}
 			}
 		}
