@@ -5,11 +5,14 @@ import java.util.Vector;
 import usf.saav.common.BasicObject;
 import usf.saav.topology.TopoTree;
 import usf.saav.topology.TopoTreeNode;
+import usf.saav.topology.AugmentedJoinTree.AugmentedJoinTreeNode;
 
 public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 
-	public	  JoinTreeNode		   head = null;
-
+    public   JoinTreeNode         head = null;
+	
+    protected AugmentedJoinTreeNode global_extreme;
+    protected Float global_extreme_value;
 	protected Vector<JoinTreeNode> nodes = new Vector<JoinTreeNode>();
 	protected float				   simplify = 0.0f;
 	protected float				   max_persistence = 0.0f;
@@ -101,6 +104,9 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	
 	@Override
 	public float getSimplePersistence(int i) {
+	    if (nodes.get(i).getValue() == global_extreme_value) {
+	        return Float.NaN;
+	    }
 	    return nodes.get(i).getSimplePersistence();
 	}
 

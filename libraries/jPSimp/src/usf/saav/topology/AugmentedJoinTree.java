@@ -25,11 +25,11 @@ import java.util.Stack;
 import usf.saav.mesh.Mesh;
 import usf.saav.topology.TopoTree;
 import usf.saav.topology.TopoTreeNode;
+import usf.saav.topology.TopoTreeNode.NodeType;
 import usf.saav.topology.JoinTree.Node;
 
 public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements TopoTree, Runnable {
 	
-	protected AugmentedJoinTreeNode global_extreme;
 	protected Mesh cl;
 	
 	private Comparator<? super Node> comparator;
@@ -52,11 +52,14 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		
 		calculatePersistence();
 		
-		for(int i = 0; i < size(); i++){
-			float per = getPersistence(i);
-			if( Float.isNaN(per) )
-				global_extreme = (AugmentedJoinTreeNode) getNode(i);
-		}
+//        for(int i = 0; i < size(); i++){
+//            float per = getPersistence(i);
+//            if( Float.isNaN(per) ) {
+//                global_extreme = (AugmentedJoinTreeNode) getNode(i);
+//            }
+//        }
+		
+		head = simpleProcessTree(jt.getRoot());
 		
 		print_info_message( "Building tree complete" );
 	}
@@ -68,8 +71,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
             cumulatedVolumn += current.getVolumn();
         }
         if (current.childCount() == 0) {
-            nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn));
-            return (AugmentedJoinTreeNode)nodes.lastElement();
+            return createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn);
         } else {
             AugmentedJoinTreeNode prev = processTree(current.getChild(0));
             int i = 1;
@@ -77,7 +79,6 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
                 AugmentedJoinTreeNode newChild = processTree(current.getChild(i));
                 prev = createTreeNode(current.getPosition(), current.getValue(), 
                                       prev.getVolumn() + newChild.getVolumn(), prev, newChild);
-                nodes.add(prev);
                 i++;
             }
             prev.volumn += cumulatedVolumn;
@@ -97,8 +98,9 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
         } else {
             AugmentedJoinTreeNode tmp = createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn);
             for (int i = 0; i < current.childCount(); i++) {
-                AugmentedJoinTreeNode newChild = processTree(current.getChild(i));
+                AugmentedJoinTreeNode newChild = simpleProcessTree(current.getChild(i));
                 tmp.addChild(newChild);
+                newChild.setParent(tmp);
                 tmp.volumn += newChild.volumn;
             }
             nodes.add(tmp);
@@ -116,7 +118,11 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
             JoinTreeNode curr = pstack.pop();
             
             // leaf is only thing in the stack, done
-            if( pstack.isEmpty() && curr.childCount() == 0 ) break;
+            if( pstack.isEmpty() && curr.childCount() == 0 ) {
+                global_extreme = (AugmentedJoinTreeNode) curr;
+                global_extreme_value = curr.getValue();
+                break;
+            }
             
             // saddle point, push children onto stack
             if( curr.childCount() == 2 ){
@@ -159,8 +165,9 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
     
         
     }
-	
-	public AugmentedJoinTreeNode getGlobalExtreme(){ return global_extreme; }
+
+    public AugmentedJoinTreeNode getGlobalExtreme(){ return global_extreme; }
+    public Float getGlobalExtremeValue(){ return global_extreme_value; }
 
 	
 	public abstract class AugmentedJoinTreeNode extends JoinTreeNode implements TopoTreeNode {
