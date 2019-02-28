@@ -109,11 +109,15 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 		
 		while (!workList.isEmpty()) {
 		    TopoTreeNode n = workList.poll();
-		    pruneLeaf(n);
-		    TopoTreeNode newVertex = reduceVertex(n);
-		    if (newVertex != null) {
-		        workList.add(newVertex);
-		    }
+		    TopoTreeNode p = n.getParent();
+		    pruneLeaf(n, p);
+	        modifyScalarField(n, p);
+	        if (p.hasParent() && p.getChildCount() == 1) {
+	            TopoTreeNode newVertex = reduceVertex(n, p);
+	            if (workList.remove(newVertex)) {
+	                workList.add(newVertex);
+	            }
+	        }
 		}
 
 		print_info_message("Build Complete");
@@ -125,38 +129,44 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 
 	}
 	
-	private void pruneLeaf(TopoTreeNode n) {
-	    
+	private void pruneLeaf(TopoTreeNode n, TopoTreeNode p) {
+	    n.setParent(null);
+	    p.removeChild((JoinTreeNode) n);
 	}
 	
-	private TopoTreeNode reduceVertex(TopoTreeNode n) {
-	    return null;
+	private TopoTreeNode reduceVertex(TopoTreeNode n, TopoTreeNode p) {
+	    JoinTreeNode sbl = p.getChild(0);
+        JoinTreeNode np = (JoinTreeNode) p.getParent();
+        sbl.setParent(np);
+        p.setParent(null);
+        p.removeChild(sbl);
+        np.removeChild((JoinTreeNode) p);
+        np.addChild((JoinTreeNode) n);
+        return sbl;
 	}
 	
-	private void modifyScalarField(TopoTreeNode n) {
+	private void modifyScalarField(TopoTreeNode n, TopoTreeNode p) {
+
         Set<Integer>   compUsed = new HashSet<Integer>();
         Queue<Integer> workList = null;
         Set<Integer>   pModify  = new HashSet<Integer>();
-
-        if( n.getType() == NodeType.LEAF_MIN && p.getType() == NodeType.MERGE ) workList = new PriorityQueue<Integer>( 11, new ComponentComparatorAscending() );
-        if( n.getType() == NodeType.LEAF_MAX && p.getType() == NodeType.SPLIT ) workList = new PriorityQueue<Integer>( 11, new ComponentComparatorDescending() );
-
-
-
-        float inval  = n.getBirth();
-        float outval = n.getDeath();
+        
+        if( n.getType() == NodeType.LEAF_MIN ) 
+            workList = new PriorityQueue<Integer>( 11, new ComponentComparatorAscending() );
+        if( n.getType() == NodeType.LEAF_MAX ) 
+            workList = new PriorityQueue<Integer>( 11, new ComponentComparatorDescending() );
 
         compUsed.add( n.getPosition() );
         workList.add( n.getPosition() );
 
-
         while( !workList.isEmpty() ){
+
             int cur = workList.poll();
 
             // Add to list of components modified
             pModify.add(cur);
 
-            // If the component is the partner, we're done
+            // If the component is the parent, we're done
             if( cur == p.getPosition() ) break;
 
             // Add neighbors who haven't already been processed to the process queue
@@ -167,96 +177,17 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
                 }
             }
         }
-
-        if( n.getType() == NodeType.LEAF_MIN && p.getType() == NodeType.MERGE ){
-            for( Integer c : pModify ){
-                Vertex cur = cl.get(c);
-                for( int pos : cur.positions() )
-                    img[pos] = Math.max( img[pos], outval );
+        
+        // modify values
+        for( Integer c : pModify ){
+            Vertex cur = cl.get(c);
+            for( int pos : cur.positions() ) {
+                if( n.getType() == NodeType.LEAF_MIN ) 
+                    img[pos] = Math.max( img[pos], p.getValue() );
+                if( n.getType() == NodeType.LEAF_MAX ) 
+                    img[pos] = Math.min( img[pos], p.getValue() );
             }
         }
-
-        // LEAF / SPLIT
-        if( n.getType() == NodeType.LEAF_MAX && p.getType() == NodeType.SPLIT ){
-            for( Integer c : pModify ){
-                Vertex cur = cl.get(c);
-                for( int pos : cur.positions() )
-                    img[pos] = Math.min( img[pos], inval );
-            }
-        }
-	}
-
-	private void simplify(TopoTreeNode n) {
-		TopoTreeNode p = n.getPartner();
-
-		if( p.getPosition() == n.getPosition() ) return;
-
-		// Skip MERGE / LEAF
-		if( n.getType() == NodeType.MERGE ) return;
-
-		// Skip SPLIT / LEAF
-		if( n.getType() == NodeType.SPLIT ) return;
-
-		// Skip LEAF_MAX / LEAF_MIN
-		if( n.getType() == NodeType.LEAF_MAX && p.getType() == NodeType.LEAF_MIN ) return;
-
-		// LEAF / SPLIT & LEAF / MERGE
-
-		// LEAF / MERGE
-		if( ( n.getType() == NodeType.LEAF_MIN && p.getType() == NodeType.MERGE ) ||
-				( n.getType() == NodeType.LEAF_MAX && p.getType() == NodeType.SPLIT ) ) {
-
-			Set<Integer>   compUsed = new HashSet<Integer>();
-			Queue<Integer> workList = null;
-			Set<Integer>   pModify  = new HashSet<Integer>();
-
-			if( n.getType() == NodeType.LEAF_MIN && p.getType() == NodeType.MERGE ) workList = new PriorityQueue<Integer>( 11, new ComponentComparatorAscending() );
-			if( n.getType() == NodeType.LEAF_MAX && p.getType() == NodeType.SPLIT ) workList = new PriorityQueue<Integer>( 11, new ComponentComparatorDescending() );
-
-
-
-			float inval  = n.getBirth();
-			float outval = n.getDeath();
-
-			compUsed.add( n.getPosition() );
-			workList.add( n.getPosition() );
-
-
-			while( !workList.isEmpty() ){
-				int cur = workList.poll();
-
-				// Add to list of components modified
-				pModify.add(cur);
-
-				// If the component is the partner, we're done
-				if( cur == p.getPosition() ) break;
-
-				// Add neighbors who haven't already been processed to the process queue
-				for( int neighbor : cl.get(cur).neighbors() ){
-					if( !compUsed.contains( neighbor ) ){
-						workList.add(neighbor);
-						compUsed.add(neighbor);
-					}
-				}
-			}
-
-			if( n.getType() == NodeType.LEAF_MIN && p.getType() == NodeType.MERGE ){
-				for( Integer c : pModify ){
-					Vertex cur = cl.get(c);
-					for( int pos : cur.positions() )
-						img[pos] = Math.max( img[pos], outval );
-				}
-			}
-
-			// LEAF / SPLIT
-			if( n.getType() == NodeType.LEAF_MAX && p.getType() == NodeType.SPLIT ){
-				for( Integer c : pModify ){
-					Vertex cur = cl.get(c);
-					for( int pos : cur.positions() )
-						img[pos] = Math.min( img[pos], inval );
-				}
-			}
-		}
 	}
 
 	class ComponentComparatorAscending implements Comparator<Integer>{
