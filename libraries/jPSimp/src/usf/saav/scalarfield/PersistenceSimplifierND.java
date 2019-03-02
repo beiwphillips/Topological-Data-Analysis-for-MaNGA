@@ -29,15 +29,14 @@ import java.util.Vector;
 import usf.saav.common.monitoredvariables.Callback;
 import usf.saav.mesh.Mesh;
 import usf.saav.mesh.Mesh.Vertex;
-import usf.saav.topology.JoinTreeNode;
-import usf.saav.topology.TopoTree;
+import usf.saav.topology.PseudoContourTree;
 import usf.saav.topology.TopoTreeNode;
 import usf.saav.topology.TopoTreeNode.NodeType;
 
 public abstract class PersistenceSimplifierND extends ScalarFieldND.Default implements ScalarFieldND, Runnable {
 
 	private ScalarFieldND sf;
-	private TopoTree ct;
+	private PseudoContourTree ct;
 	private Mesh cl;
 
 	private float [] img;
@@ -47,11 +46,11 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 	protected Callback cb = null;
 
 
-	public PersistenceSimplifierND( ScalarFieldND sf, TopoTree ct, Mesh cl, boolean runImmediately ){
+	public PersistenceSimplifierND( ScalarFieldND sf, PseudoContourTree ct, Mesh cl, boolean runImmediately ){
 		this( sf, ct, cl, runImmediately, true );
 	}
 
-	public PersistenceSimplifierND( ScalarFieldND sf, TopoTree ct, Mesh cl, boolean runImmediately, boolean verbose ){
+	public PersistenceSimplifierND( ScalarFieldND sf, PseudoContourTree ct, Mesh cl, boolean runImmediately, boolean verbose ){
 		super( verbose );
 		this.sf = sf;
 		this.ct = ct;
@@ -60,7 +59,7 @@ public abstract class PersistenceSimplifierND extends ScalarFieldND.Default impl
 	}
 
 
-	public TopoTree			getTree( ){				return ct; }
+	public PseudoContourTree			getTree( ){				return ct; }
 	public Mesh			getComponentList(){ 	return cl; }
 	public ScalarFieldND			getScalarField( ){  	return sf; }
 

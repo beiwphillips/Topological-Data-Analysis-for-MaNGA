@@ -21,18 +21,18 @@ package usf.saav.scalarfield;
 
 import usf.saav.common.monitoredvariables.Callback;
 import usf.saav.mesh.Mesh;
-import usf.saav.topology.TopoTree;
+import usf.saav.topology.PseudoContourTree;
 
 public class PersistenceSimplifier3D extends PersistenceSimplifierND implements ScalarField3D {
 
 	private ScalarField3D sf;
 	
 
-	public PersistenceSimplifier3D(ScalarField3D sf, TopoTree ct, Mesh cl, boolean runImmediately ) {
+	public PersistenceSimplifier3D(ScalarField3D sf, PseudoContourTree ct, Mesh cl, boolean runImmediately ) {
 		this( sf, ct, cl, runImmediately, true );
 	}
 	
-	public PersistenceSimplifier3D(ScalarField3D sf, TopoTree ct, Mesh cl, boolean runImmediately, boolean verbose ) {
+	public PersistenceSimplifier3D(ScalarField3D sf, PseudoContourTree ct, Mesh cl, boolean runImmediately, boolean verbose ) {
 		super(sf, ct, cl, runImmediately);
 		this.sf = sf;
 	}

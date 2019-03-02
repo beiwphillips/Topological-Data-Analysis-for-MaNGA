@@ -33,7 +33,7 @@ import usf.saav.mesh.Mesh.Vertex;
 import usf.saav.scalarfield.ScalarField2D;
 import usf.saav.scalarfield.ScalarField3D;
 import usf.saav.scalarfield.ScalarFieldND;
-import usf.saav.topology.TopoTree;
+import usf.saav.topology.PseudoContourTree;
 import usf.saav.topology.TopoTreeNode;
 
 // TODO: Auto-generated Javadoc
@@ -43,7 +43,7 @@ import usf.saav.topology.TopoTreeNode;
 public class ContourTreeDrawing extends ViewComponent.Default implements ViewComponent {
 
 	private ScalarFieldND  sf;
-	private TopoTree ct;
+	private PseudoContourTree ct;
 	private usf.saav.mesh.Mesh  cl;
 	private Set<Integer>   selected;
 	//private int tx = 0, ty = 0;
@@ -100,7 +100,7 @@ public class ContourTreeDrawing extends ViewComponent.Default implements ViewCom
 	 * @param cl the cl
 	 * @param zr the zr
 	 */
-	public void setField( ScalarFieldND sf, TopoTree ct, Mesh cl, IntRange1D zr ){
+	public void setField( ScalarFieldND sf, PseudoContourTree ct, Mesh cl, IntRange1D zr ){
 		this.ct = ct;
 		this.sf = sf;
 		this.cl = cl;

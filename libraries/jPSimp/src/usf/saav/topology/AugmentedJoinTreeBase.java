@@ -50,7 +50,7 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	
 
 	
-	@Override public float getMaxPersistence(){ return max_persistence; }
+	public float getMaxPersistence(){ return max_persistence; }
 	
 	@Override 
 	public void setSimplificationLevel( float threshold ){
@@ -70,16 +70,6 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	@Override
 	public String getSimplificationMetric( ) {
 	    return metric;
-	}
-
-	@Override
-	public boolean isActive(int i){
-        return false;
-	}
-	
-	@Override
-	public boolean isPruning(int i) {
-	    return false;
 	}
 
 	@Override

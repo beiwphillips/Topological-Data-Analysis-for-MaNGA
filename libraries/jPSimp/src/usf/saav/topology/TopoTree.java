@@ -26,9 +26,6 @@ public interface TopoTree {
 	float getSimplificationLevel( );
 	String getSimplificationMetric( );
 	
-	boolean isActive(int i);
-    boolean isPruning(int i);
-	
 	int size();
 	
 	float getBirth(int i);
@@ -38,7 +35,5 @@ public interface TopoTree {
 	int getVolumn(int i);
 	
 	TopoTreeNode getNode( int i );
-	
-	float getMaxPersistence();
 	
 }

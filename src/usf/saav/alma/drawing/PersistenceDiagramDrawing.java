@@ -31,6 +31,7 @@ import usf.saav.common.mvc.ViewComponent;
 import usf.saav.common.mvc.swing.TGraphics;
 import usf.saav.common.range.FloatRange1D;
 import usf.saav.common.types.Float2;
+import usf.saav.topology.PseudoContourTree;
 import usf.saav.topology.TopoTree;
 
 // TODO: Auto-generated Javadoc
@@ -54,7 +55,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 	 * @param curr the curr
 	 * @param pd the pd
 	 */
-	public void setParameterizations( TopoTree curr, TopoTree ... pd ){
+	public void setParameterizations( TopoTree curr, PseudoContourTree ... pd ){
 
 		if( curr == null || pd == null || pd.length == 0 ){
 			this.pd = null;
@@ -66,7 +67,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 
 		bd_range = new FloatRange1D( curr.getBirth(0) );
 
-		for( TopoTree _pd : pd ){
+		for( PseudoContourTree _pd : pd ){
 			for(int i = 0; i < _pd.size(); i++){
 				bd_range.expand( _pd.getBirth(i) );
 				bd_range.expand( _pd.getDeath(i) );
@@ -139,7 +140,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 		g.stroke(0);
 		g.fill(100);
 
-		for( TopoTree _pd : pd ){
+		for( PseudoContourTree _pd : pd ){
 			for(int i = 0; i < _pd.size(); i++){
 				
 				float x = MathX.lerp( winX.start()+5, winX.end()-5, (float)bd_range.getNormalized( _pd.getBirth(i) ) );
@@ -271,7 +272,7 @@ public class PersistenceDiagramDrawing extends ViewComponent.Default implements 
 	}
 
 	private MonitoredFloat simplification = new MonitoredFloat( 0 );
-	private TopoTree [] pd = null;
+	private PseudoContourTree [] pd = null;
 	private Set<Integer> selected = new HashSet<Integer>();
 	private float simp;
 	private boolean modifySimpl = false;

@@ -24,20 +24,19 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
-import java.util.Vector;
 
 import usf.saav.common.monitoredvariables.Callback;
 import usf.saav.mesh.Mesh;
 import usf.saav.mesh.Mesh.Vertex;
 import usf.saav.topology.JoinTreeNode;
-import usf.saav.topology.TopoTree;
+import usf.saav.topology.PseudoContourTree;
 import usf.saav.topology.TopoTreeNode;
 import usf.saav.topology.TopoTreeNode.NodeType;
 
 public abstract class SimplifierND extends ScalarFieldND.Default implements ScalarFieldND, Runnable {
 
 	private ScalarFieldND sf;
-	private TopoTree ct;
+	private PseudoContourTree ct;
 	private Mesh cl;
 
 	private float [] img;
@@ -47,11 +46,11 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 	protected Callback cb = null;
 
 
-	public SimplifierND( ScalarFieldND sf, TopoTree ct, Mesh cl, boolean runImmediately ){
+	public SimplifierND( ScalarFieldND sf, PseudoContourTree ct, Mesh cl, boolean runImmediately ){
 		this( sf, ct, cl, runImmediately, true );
 	}
 
-	public SimplifierND( ScalarFieldND sf, TopoTree ct, Mesh cl, boolean runImmediately, boolean verbose ){
+	public SimplifierND( ScalarFieldND sf, PseudoContourTree ct, Mesh cl, boolean runImmediately, boolean verbose ){
 		super( verbose );
 		this.sf = sf;
 		this.ct = ct;
@@ -60,7 +59,7 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 	}
 
 
-	public TopoTree			getTree( ){				return ct; }
+	public PseudoContourTree			getTree( ){				return ct; }
 	public Mesh			getComponentList(){ 	return cl; }
 	public ScalarFieldND			getScalarField( ){  	return sf; }
 

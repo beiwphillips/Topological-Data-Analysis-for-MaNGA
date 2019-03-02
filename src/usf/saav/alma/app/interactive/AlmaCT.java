@@ -166,7 +166,7 @@ public class AlmaCT extends BasicObject {
 				
 				ctLabel.disable();
 				
-				pdd.setParameterizations( ct.get( model.monZ.get() ), ct.values().toArray( new TopoTree[ct.size()] ) );
+				pdd.setParameterizations( ct.get( model.monZ.get() ), ct.values().toArray( new PseudoContourTree[ct.size()] ) );
 				pdd.enable();
 				
 				ctv.setCoordinateSystem( model.csCont );

@@ -22,16 +22,16 @@ package usf.saav.scalarfield;
 
 import usf.saav.common.monitoredvariables.Callback;
 import usf.saav.mesh.Mesh;
-import usf.saav.topology.TopoTree;
+import usf.saav.topology.PseudoContourTree;
 
 public class Simplifier2D extends SimplifierND implements ScalarField2D {
 
     private ScalarField2D sf;
     
-    public Simplifier2D(ScalarField2D sf, TopoTree ct, Mesh cl, boolean runImmediately ) {
+    public Simplifier2D(ScalarField2D sf, PseudoContourTree ct, Mesh cl, boolean runImmediately ) {
         this( sf, ct, cl, runImmediately, true );
     }
-    public Simplifier2D(ScalarField2D sf, TopoTree ct, Mesh cl, boolean runImmediately, boolean verbose ) {
+    public Simplifier2D(ScalarField2D sf, PseudoContourTree ct, Mesh cl, boolean runImmediately, boolean verbose ) {
         super(sf, ct, cl, runImmediately);
         this.sf = sf;
     }
