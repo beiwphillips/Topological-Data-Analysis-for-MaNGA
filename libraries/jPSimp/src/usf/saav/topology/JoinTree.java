@@ -32,24 +32,24 @@ import usf.saav.scalarfield.ScalarField2D;
 
 public class JoinTree implements Runnable {
  
-	private   Comparator<? super Node> comparator;
+	private   Comparator<? super JoinTreeNode> comparator;
 	private   Mesh sf;
 	private   int width;
-	private   Node head;
+	private   JoinTreeNode head;
 	protected boolean operationComplete = false;
 
 	public JoinTree( Mesh sf ) {
 		this.sf = sf;
-		this.comparator = new Node.ComparatorValueAscending();
+		this.comparator = new JoinTreeNode.ComparatorValueAscending();
 	}
 	
-	protected JoinTree( Mesh sf, Comparator<? super Node> comparator  ) {
+	protected JoinTree( Mesh sf, Comparator<? super JoinTreeNode> comparator  ) {
 		this.sf = sf;
 		this.comparator = comparator;
 	}
 
 	
-	public Node getRoot( ){
+	public JoinTreeNode getRoot( ){
 		if( !operationComplete ) return null;
 		return head;
 	}
@@ -66,13 +66,13 @@ public class JoinTree implements Runnable {
 		if( operationComplete ) return;
 
 		this.width = sf.getWidth();
-		Node [] grid;
-		grid = new Node[width];
+		JoinTreeNode [] grid;
+		grid = new JoinTreeNode[width];
 
 		// We first order the points for adding to the tree.
-		Queue< Node > tq = new PriorityQueue< Node >( width, comparator );
+		Queue< JoinTreeNode > tq = new PriorityQueue< JoinTreeNode >( width, comparator );
 		for(int i = 0; i < sf.getWidth(); i++ ){
-			tq.add( new Node( sf.get(i).value(), i, sf.get(i).size() ) );
+			tq.add( new JoinTreeNode( i, sf.get(i).value(), sf.get(i).size() ) );
 		}
 		
 		// Disjoint Set used to mark which set a points belongs to
@@ -94,7 +94,7 @@ public class JoinTree implements Runnable {
 	}
 	
 
-	private void init_mergeWithNeighbors( Node [] grid, Node me, Mesh sf, boolean [] bm, ArrayDisjointSet dj ) {
+	private void init_mergeWithNeighbors( JoinTreeNode [] grid, JoinTreeNode me, Mesh sf, boolean [] bm, ArrayDisjointSet dj ) {
 		
 		int [] neighbors = sf.get( me.getPosition() ).neighbors();
 		
@@ -127,29 +127,5 @@ public class JoinTree implements Runnable {
 		System.out.println(sf.toString());
 		System.out.println(jt);
 	}
-
-	
-	public class Node extends JoinTreeNode {
-
-		private int position;
-		private float value;
-		private int volumn;
-
-		
-		public Node( float value, int position, int size ) {
-			this.position = position;
-			this.value = value;
-			this.volumn = size;
-		}
-
-
-		@Override public float getValue( ){ return value; }
-		@Override public int   getPosition( ){ return position; }
-		@Override public int   getVolumn( ){ return volumn; }
-
-		@Override public NodeType getType() { return NodeType.UNKNOWN; }
-		
-	}
-
 	
 }

@@ -30,12 +30,21 @@ import java.util.Vector;
 
 import usf.saav.common.types.Pair;
 
-public abstract class JoinTreeNode implements TopoTreeNode {
+public class JoinTreeNode implements TopoTreeNode {
 
+    private int position;
+    private float value;
+    private int volumn;
+    
 	protected Vector<JoinTreeNode> children = new Vector<JoinTreeNode>( );
 	protected JoinTreeNode parent  = null;
 	protected JoinTreeNode partner = null;
 
+    public JoinTreeNode( int position, float value, int volumn ) {
+        this.position = position;
+        this.value = value;
+        this.volumn = volumn;
+    }
 	
     @Override public void addChild( JoinTreeNode c ){	 children.add(c); }
     @Override public void addChildren(Collection<JoinTreeNode> c){ children.addAll(c); }
@@ -71,9 +80,12 @@ public abstract class JoinTreeNode implements TopoTreeNode {
 	    return Math.abs( getValue()-parent.getValue());
 	}
 	
-	public abstract float getValue( );
-	public abstract int   getPosition( );
-	public abstract int   getVolumn();
+    @Override public int getPosition( ){ return position; }
+    @Override public float getValue( ){ return value; }
+    @Override public int getVolumn( ){ return volumn; }
+    public void addVolumn(int toAdd){ this.volumn += toAdd; }
+    
+    @Override public NodeType getType() { return NodeType.UNKNOWN; }
 
 	@Override public String toString(){
 		StringBuffer bf = new StringBuffer( );

@@ -32,7 +32,6 @@ import usf.saav.mesh.Mesh.Vertex;
 import usf.saav.topology.JoinTreeNode;
 import usf.saav.topology.TopoTree;
 import usf.saav.topology.TopoTreeNode;
-import usf.saav.topology.JoinTree.Node;
 import usf.saav.topology.TopoTreeNode.NodeType;
 
 public abstract class SimplifierND extends ScalarFieldND.Default implements ScalarFieldND, Runnable {

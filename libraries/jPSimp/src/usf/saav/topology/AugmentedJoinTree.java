@@ -25,17 +25,15 @@ import java.util.Stack;
 import usf.saav.mesh.Mesh;
 import usf.saav.topology.TopoTree;
 import usf.saav.topology.TopoTreeNode;
-import usf.saav.topology.TopoTreeNode.NodeType;
-import usf.saav.topology.JoinTree.Node;
 
 public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements TopoTree, Runnable {
 	
 	protected Mesh cl;
 	
-	private Comparator<? super Node> comparator;
+	private Comparator<? super JoinTreeNode> comparator;
 
 	
-	protected AugmentedJoinTree( Mesh cl, Comparator<? super Node> comparator ){
+	protected AugmentedJoinTree( Mesh cl, Comparator<? super JoinTreeNode> comparator ){
 		this.cl = cl;
 		this.comparator = comparator;
 	}
@@ -81,7 +79,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
                                       prev.getVolumn() + newChild.getVolumn(), prev, newChild);
                 i++;
             }
-            prev.volumn += cumulatedVolumn;
+            prev.addVolumn(cumulatedVolumn);
             return prev;
         }
     }
@@ -101,7 +99,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
                 AugmentedJoinTreeNode newChild = simpleProcessTree(current.getChild(i));
                 tmp.addChild(newChild);
                 newChild.setParent(tmp);
-                tmp.volumn += newChild.volumn;
+                tmp.addVolumn(newChild.getVolumn());
             }
             nodes.add(tmp);
             return tmp;
@@ -172,29 +170,15 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	
 	public abstract class AugmentedJoinTreeNode extends JoinTreeNode implements TopoTreeNode {
 		
-		private int location;
-		private float value;
-		private int volumn;
-		
-		
-		protected AugmentedJoinTreeNode( int loc, float val, int volumn ){
-			this.location = loc;
-			this.value = val;
-			this.volumn = volumn;
+		AugmentedJoinTreeNode( int loc, float val, int volumn ){
+			super(loc, val, volumn);
 		}
 		
 		protected AugmentedJoinTreeNode( int loc, float val, int volumn, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
-			this.location = loc;
-			this.value = val;
-			this.volumn = volumn;
+			super(loc, val, volumn);
 			this.addChild(c0);
 			this.addChild(c1);
 		}
-		
-		
-		@Override public int	getPosition() { return location; }
-		@Override public float getValue() { return value; }
-		@Override public int getVolumn() { return volumn; }
 
 	}
 	

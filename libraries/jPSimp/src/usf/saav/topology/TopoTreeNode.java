@@ -45,16 +45,17 @@ public interface TopoTreeNode {
 
 	void setPartner(JoinTreeNode jtn);
 	TopoTreeNode getPartner();
+	
 	void setParent(JoinTreeNode p);
 	TopoTreeNode getParent();
 	boolean hasParent();
-
-	int getPosition();
 
 	float getBirth();
 	float getDeath();
 	float getPersistence();
 	float getSimplePersistence();
+	
+	int getPosition();
     float getValue();
 	int getVolumn();
 	
