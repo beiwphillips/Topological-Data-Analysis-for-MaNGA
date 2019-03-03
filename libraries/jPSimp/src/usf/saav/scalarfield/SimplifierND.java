@@ -112,8 +112,9 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 	        modifyScalarField(n, p);
 	        if (p.hasParent() && p.getChildCount() == 1) {
 	            TopoTreeNode newVertex = reduceVertex(n, p);
-	            if (workList.remove(newVertex)) {
-	                workList.add(newVertex);
+	            if (workList.remove(newVertex) && ct.isPruning(newVertex) && 
+	                    (newVertex.getType() == NodeType.LEAF_MAX || newVertex.getType() == NodeType.LEAF_MIN)) {
+                    workList.add(newVertex);
 	            }
 	        }
 		}
@@ -139,7 +140,7 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
         p.setParent(null);
         p.removeChild(sbl);
         np.removeChild((JoinTreeNode) p);
-        np.addChild((JoinTreeNode) n);
+        np.addChild((JoinTreeNode) sbl);
         return sbl;
 	}
 	
