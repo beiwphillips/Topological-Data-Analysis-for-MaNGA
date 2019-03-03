@@ -106,6 +106,7 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 		}
 		
 		while (!workList.isEmpty()) {
+//          System.out.println("Legal Tree: "+ct.checkTree());
 		    TopoTreeNode n = workList.poll();
 		    TopoTreeNode p = n.getParent();
 		    pruneLeaf(n, p);

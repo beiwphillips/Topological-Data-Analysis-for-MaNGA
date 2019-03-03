@@ -166,6 +166,20 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 
     public AugmentedJoinTreeNode getGlobalExtreme(){ return global_extreme; }
     public Float getGlobalExtremeValue(){ return global_extreme_value; }
+    
+    public boolean checkTree() {
+        return checkTreeBase(head);
+    }
+    
+    protected boolean checkTreeBase(JoinTreeNode current) {
+        if (current == null || current.getChildCount() == 0)
+            return true;
+        for (JoinTreeNode c : current.getChildren()) {
+            if (!checkTreeBase(c) || !c.parent.equals(current))
+                return false;
+        }
+        return true;
+    }
 
 	
 	public abstract class AugmentedJoinTreeNode extends JoinTreeNode implements TopoTreeNode {

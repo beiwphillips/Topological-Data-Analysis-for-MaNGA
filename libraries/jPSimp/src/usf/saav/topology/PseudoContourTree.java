@@ -152,6 +152,9 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	    return st.getVolumn(i-mt.size());
 	}
 
+	public boolean checkTree() {
+	    return mt.checkTree() && st.checkTree();
+	}
 	
 	
 	
