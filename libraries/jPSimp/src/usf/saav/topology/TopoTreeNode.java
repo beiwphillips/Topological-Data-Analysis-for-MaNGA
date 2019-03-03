@@ -41,7 +41,7 @@ public interface TopoTreeNode {
     public boolean isChild(JoinTreeNode node);
     public int childCount();
     public boolean hasChildren();
-    public void removeChild(JoinTreeNode node);
+    public boolean removeChild(JoinTreeNode node);
 
 	void setPartner(JoinTreeNode jtn);
 	TopoTreeNode getPartner();

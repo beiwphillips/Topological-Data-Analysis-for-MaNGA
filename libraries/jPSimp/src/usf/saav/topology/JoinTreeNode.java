@@ -54,7 +54,7 @@ public class JoinTreeNode implements TopoTreeNode {
     @Override public boolean isChild(JoinTreeNode node){ return children.contains(node); }
     @Override public int childCount( ){ return children.size(); }
     @Override public boolean hasChildren( ){ return children.size() != 0; }
-    @Override public void removeChild(JoinTreeNode node){ children.remove(node); }
+    @Override public boolean removeChild(JoinTreeNode node){ return children.remove(node); }
 
     @Override public void setPartner( JoinTreeNode jtn ) { partner = jtn; }
     @Override public TopoTreeNode getPartner() { return partner; }
