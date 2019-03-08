@@ -41,7 +41,7 @@ public class TDAExec {
 	public String filename = null;
 	public IntRange1D xr=null,yr=null,zr=null;
 	public float simplification = 0;
-	public String metric = null;
+	public String metric = "persistence";
 	public TreeDimension treedim = TreeDimension.DIM_2D;
 	public String  output  = null;
 

@@ -16,6 +16,7 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	protected Vector<JoinTreeNode> nodes = new Vector<JoinTreeNode>();
 	protected float				   simplify = 0.0f;
 	protected float				   max_persistence = 0.0f;
+	protected int                   max_volumn = 0;
 	protected String                metric = "persistence";
 	
 	
@@ -51,6 +52,7 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 
 	
 	public float getMaxPersistence(){ return max_persistence; }
+	public int   getMaxVolumn(){ return max_volumn; }
 	
 	@Override 
 	public void setSimplificationLevel( float threshold ){

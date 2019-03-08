@@ -85,10 +85,24 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 		}
 
 //		Vector<TopoTreeNode> workList = new Vector<TopoTreeNode>();
-	    Queue<TopoTreeNode> workList = new PriorityQueue<TopoTreeNode>( 
-	            sf.getSize(), 
-	            new TopoTreeNode.CompareSimplePersistenceDescending()
-	            );
+		Queue<TopoTreeNode> workList;
+		
+		switch (ct.getSimplificationMetric()) {
+            case "persistence":
+                workList = new PriorityQueue<TopoTreeNode>( 
+                        sf.getSize(), 
+                        new TopoTreeNode.CompareSimplePersistenceDescending()
+                        );
+                break;
+            case "volumn":
+                workList = new PriorityQueue<TopoTreeNode>( 
+                        sf.getSize(), 
+                        new TopoTreeNode.CompareVolumnDescending()
+                        );
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
 
 		// Simplify the field, component by component
 		for(int i = 0; i < ct.size(); i++){

@@ -46,9 +46,10 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		JoinTree jt = new JoinTree( cl, comparator );
 		jt.run();
 
-		head = processTree( jt.getRoot() );
-		
-		calculatePersistence();
+	     head = simpleProcessTree(jt.getRoot());
+	     
+		calculateMaxPersistence(jt.getRoot());
+		calculateMaxVolumn(head);
 		
 //        for(int i = 0; i < size(); i++){
 //            float per = getPersistence(i);
@@ -56,8 +57,6 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 //                global_extreme = (AugmentedJoinTreeNode) getNode(i);
 //            }
 //        }
-		
-		head = simpleProcessTree(jt.getRoot());
 		
 		print_info_message( "Building tree complete" );
 	}
@@ -106,11 +105,13 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
         }
     }
 
-    protected void calculatePersistence(){
+    protected void calculateMaxPersistence(JoinTreeNode root){
         print_info_message( "Finding Persistence");
         
+        JoinTreeNode head = processTree(root);
+        
         Stack<JoinTreeNode> pstack = new Stack<JoinTreeNode>( );
-        pstack.push( this.head );
+        pstack.push( head );
         
         while( !pstack.isEmpty() ){
             JoinTreeNode curr = pstack.pop();
@@ -157,11 +158,18 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
                     }
                     max_persistence = Math.max(max_persistence,parent.getPersistence());
                 }
-                
             }
         }
+    }
     
-        
+    protected void calculateMaxVolumn(JoinTreeNode head) {
+        int max = Integer.MIN_VALUE;
+        for (JoinTreeNode child : head.getChildren()) {
+            int v = child.getVolumn();
+            if (v > max)
+                max = v;
+        }
+        max_volumn = max;
     }
 
     public AugmentedJoinTreeNode getGlobalExtreme(){ return global_extreme; }

@@ -34,8 +34,8 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	private AugmentedJoinTreeNode global_min;
 	private AugmentedJoinTreeNode global_max;
 	private float max_persistence = 0;
+	private int max_volumn = 0;
 	private float simplify = 0.0f;
-	private int total_volumn = 0;
 	private String metric = "persistence";
 	
 	public PseudoContourTree( Mesh sf ){
@@ -62,8 +62,15 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 			e.printStackTrace();
 		}
 		
+		System.out.println("Merge Tree Nodes: "+mt.size());
+		System.out.println("Merge Tree Max Persistence: "+mt.getMaxPersistence());
+		System.out.println("Merge Tree Max Volumn: "+mt.getMaxVolumn());
+		System.out.println("Split Tree Nodes: "+st.size());
+		System.out.println("Split Tree Max Persistence: "+st.getMaxPersistence());
+		System.out.println("Split Tree Max Volumn: "+st.getMaxVolumn());
+		
 		max_persistence = Math.max( mt.getMaxPersistence(), st.getMaxPersistence() );
-		total_volumn = sf.getSize();
+		max_volumn = Math.max(mt.getMaxVolumn(), st.getMaxVolumn());
 		global_min = mt.getGlobalExtreme();
 		global_max = st.getGlobalExtreme();
 		
@@ -83,7 +90,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	public String getSimplificationMetric( ){ return metric; }
 	
 	public float getMaxPersistence(){ return max_persistence; }
-	public int getTotalVolumn(){ return total_volumn; }
+	public int getMaxVolumn(){ return max_volumn; }
 	public AugmentedJoinTreeNode getGlobalMin(){ return global_min; }
 	public AugmentedJoinTreeNode getGlobalMax(){ return global_max; }
 	
@@ -119,6 +126,12 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	        return mt.getSimplePersistence(i);
 	    return st.getSimplePersistence(i-mt.size());
 	}
+	
+    public int getVolumn(int i) {
+        if (i < mt.size())
+            return mt.getVolumn(i);
+        return st.getVolumn(i-mt.size());
+    }
 
 	public TopoTreeNode getNode(int i) {
 		if( i < mt.size() )
@@ -130,27 +143,25 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	    if (metric.equals("persistence"))
 	        return getPersistence(i) > simplify * max_persistence;
 	    else if (metric.equals("volumn"))
-	        return getVolumn(i) > simplify * total_volumn;
+	        return getVolumn(i) > simplify * max_volumn;
         return false;
 	}
        
     public boolean isPruning(int i) {
         if (metric.equals("persistence"))
             return getSimplePersistence(i) <= simplify * max_persistence;
+        else if (metric.equals("volumn"))
+            return getVolumn(i) <= simplify * max_volumn;
         return false;
     }
     
     public boolean isPruning(TopoTreeNode n) {
         if (metric.equals("persistence"))
             return n.getSimplePersistence() <= simplify * max_persistence;
+        else if (metric.equals("volumn"))
+            return n.getVolumn() <= simplify * max_volumn;
         return false;
     }
-	
-	public int getVolumn(int i) {
-	    if (i < mt.size())
-	        return mt.getVolumn(i);
-	    return st.getVolumn(i-mt.size());
-	}
 
 	public boolean checkTree() {
 	    return mt.checkTree() && st.checkTree();
