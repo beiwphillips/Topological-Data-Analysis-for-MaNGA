@@ -107,6 +107,9 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	}
 	
 	public int getVolumn(int i) {
+	    if (nodes.get(i).getValue() == global_extreme_value) {
+	        return Integer.MAX_VALUE;
+	    }
 	    return nodes.get(i).getVolumn();
 	}
 	
