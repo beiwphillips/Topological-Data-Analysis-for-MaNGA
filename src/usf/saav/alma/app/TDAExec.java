@@ -86,7 +86,7 @@ public class TDAExec {
 					writeslice = new Composite2D(writeslice, sliceProc.s2d, xr.start(), yr.start() );
 				}
 				if( treedim == TreeDimension.DIM_3D && zr.inRange(d) ){
-					ScalarField2D modslice = new Extract2DFrom3D( volProc.ps3d, d-zr.start() );
+					ScalarField2D modslice = new Extract2DFrom3D( volProc.s3d, d-zr.start() );
 					writeslice = new Composite2D(writeslice, modslice, xr.start(), yr.start() );
 				}
 				fw.writeSlice( writeslice );

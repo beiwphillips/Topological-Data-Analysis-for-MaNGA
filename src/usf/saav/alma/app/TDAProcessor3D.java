@@ -29,11 +29,13 @@ import usf.saav.mesh.ConnectedComponentMesh;
 import usf.saav.mesh.ScalarFieldMesh;
 import usf.saav.scalarfield.PersistenceSimplifier3D;
 import usf.saav.scalarfield.ScalarField3D;
+import usf.saav.scalarfield.Simplifier3D;
 import usf.saav.topology.PseudoContourTree;
 
 public class TDAProcessor3D extends BasicObject {
 
-	PersistenceSimplifier3D ps3d;
+//	PersistenceSimplifier3D ps3d;
+	Simplifier3D s3d;
 	ScalarField3D vol;
 
 	public TDAProcessor3D( ){
@@ -67,7 +69,8 @@ public class TDAProcessor3D extends BasicObject {
 		ct.setSimplificationLevel( simplification );
 		ct.setSimplificationMetric( metric );
 		this.print_info_message("Simplfying Field");
-		ps3d = new PersistenceSimplifier3D( vol, ct, cl, true );
+//		ps3d = new PersistenceSimplifier3D( vol, ct, cl, true );
+	    s3d = new Simplifier3D( vol, ct, cl, true );
 
 	}
 
