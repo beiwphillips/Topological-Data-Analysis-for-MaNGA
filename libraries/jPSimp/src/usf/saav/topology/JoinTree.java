@@ -65,21 +65,21 @@ public class JoinTree implements Runnable {
 		
 		if( operationComplete ) return;
 
-		this.width = sf.getWidth();
+		this.width = sf.size();
 		JoinTreeNode [] grid;
 		grid = new JoinTreeNode[width];
 
 		// We first order the points for adding to the tree.
 		Queue< JoinTreeNode > tq = new PriorityQueue< JoinTreeNode >( width, comparator );
-		for(int i = 0; i < sf.getWidth(); i++ ){
+		for(int i = 0; i < sf.size(); i++ ){
 			tq.add( new JoinTreeNode( i, sf.get(i).value(), sf.get(i).size() ) );
 		}
 		
 		// Disjoint Set used to mark which set a points belongs to
-		ArrayDisjointSet dj = new ArrayDisjointSet( sf.getWidth() );
+		ArrayDisjointSet dj = new ArrayDisjointSet( sf.size() );
 		
 		// Mask for marking who has been processed
-		boolean [] bm = new boolean[sf.getWidth()];
+		boolean [] bm = new boolean[sf.size()];
 		Arrays.fill(bm, false );
 		
 		// start popping elements off the of the list

@@ -26,8 +26,7 @@ public abstract class Mesh extends Vector<Mesh.Vertex> {
 
 	public Mesh( ){ }
 
-	public int getWidth() { return size(); }
-	public abstract int getSize();
+	public int getVolumn() { return size(); };
 
 	public static float [] getComponentMidpoint( Vertex c, int width, int height ){
 		float retX = 0, retY = 0, retZ = 0;

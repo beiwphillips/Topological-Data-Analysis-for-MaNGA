@@ -30,13 +30,15 @@ import usf.saav.common.algorithm.ArrayDisjointSet;
 public class ConnectedComponentMesh extends Mesh {
 	private static final long serialVersionUID = 8258598594472055291L;
 
+	private Mesh oldComp;
 	private ArrayDisjointSet djs;
 	private Vector<ConnectedComponent> tmpVec;
 
 	public ConnectedComponentMesh(Mesh oldComp){
-		djs = new ArrayDisjointSet( oldComp.getWidth() );
+	    this.oldComp = oldComp;
+		djs = new ArrayDisjointSet( oldComp.size() );
 
-		for( int i = 0; i < oldComp.getWidth(); i++ ){
+		for( int i = 0; i < oldComp.size(); i++ ){
 			float v0 = oldComp.get(i).value();
 			for( int n : oldComp.get(i).neighbors() ){
 				float v1 = oldComp.get(n).value();
@@ -52,9 +54,9 @@ public class ConnectedComponentMesh extends Mesh {
 		}
 
 		tmpVec = new Vector<ConnectedComponent>();
-		for( int i = 0; i < oldComp.getWidth(); i++ ){
+		for( int i = 0; i < oldComp.size(); i++ ){
 			if( djs.find(i) == i ){
-				ConnectedComponent m = new ConnectedComponent( getWidth(), oldComp.get(i) );
+				ConnectedComponent m = new ConnectedComponent( size(), oldComp.get(i) );
 				add(m);
 				tmpVec.add( m );
 			}
@@ -64,12 +66,11 @@ public class ConnectedComponentMesh extends Mesh {
 			}
 		}
 	}
-	
+    
 	@Override
-	public int getSize() {
-	    return tmpVec.size();
+	public int getVolumn() {
+	    return oldComp.size();
 	}
-
 
 	public class ConnectedComponent extends Vector<Vertex> implements Vertex {
 		private static final long serialVersionUID = -4014406590124257973L;
