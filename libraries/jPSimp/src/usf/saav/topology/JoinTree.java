@@ -72,7 +72,7 @@ public class JoinTree implements Runnable {
 		// We first order the points for adding to the tree.
 		Queue< JoinTreeNode > tq = new PriorityQueue< JoinTreeNode >( width, comparator );
 		for(int i = 0; i < sf.size(); i++ ){
-			tq.add( new JoinTreeNode( i, sf.get(i).value(), sf.get(i).size() ) );
+			tq.add( new JoinTreeNode( i, sf.get(i).value(), sf.get(i).size(), sf.get(i).integral() ) );
 		}
 		
 		// Disjoint Set used to mark which set a points belongs to

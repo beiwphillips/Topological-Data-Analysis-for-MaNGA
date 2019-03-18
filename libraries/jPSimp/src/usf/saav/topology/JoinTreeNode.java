@@ -35,15 +35,17 @@ public class JoinTreeNode implements TopoTreeNode {
     private int position;
     private float value;
     private int volumn;
+    private float hypervolumn;
     
 	protected Vector<JoinTreeNode> children = new Vector<JoinTreeNode>( );
 	protected JoinTreeNode parent  = null;
 	protected JoinTreeNode partner = null;
 
-    public JoinTreeNode( int position, float value, int volumn ) {
+    public JoinTreeNode( int position, float value, int volumn, float hypervolumn ) {
         this.position = position;
         this.value = value;
         this.volumn = volumn;
+        this.hypervolumn = hypervolumn;
     }
 	
     @Override public void addChild( JoinTreeNode c ){	 children.add(c); }
@@ -83,7 +85,14 @@ public class JoinTreeNode implements TopoTreeNode {
     @Override public int getPosition( ){ return position; }
     @Override public float getValue( ){ return value; }
     @Override public int getVolumn( ){ return volumn; }
+    
+    @Override public float getHyperVolumn() {
+        if( parent == null ) return Float.NaN;
+        return Math.abs(hypervolumn - parent.getValue() * getVolumn()); 
+    }
+    
     public void addVolumn(int toAdd){ this.volumn += toAdd; }
+    public void addHyperVolumn(float toAdd){ this.hypervolumn += toAdd; }
     
     @Override public NodeType getType() { return NodeType.UNKNOWN; }
 

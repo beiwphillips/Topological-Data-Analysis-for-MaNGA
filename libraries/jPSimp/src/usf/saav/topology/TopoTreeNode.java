@@ -58,7 +58,7 @@ public interface TopoTreeNode {
 	int getPosition();
     float getValue();
 	int getVolumn();
-	
+	float getHyperVolumn();
 
 	
 	
@@ -114,5 +114,23 @@ public interface TopoTreeNode {
         }
     }
 	
+	
+    public static class CompareHyperVolumnAscending implements Comparator<TopoTreeNode> {
+        @Override
+        public int compare(TopoTreeNode o1, TopoTreeNode o2) {
+            if (o1.getHyperVolumn() > o2.getHyperVolumn()) return 1;
+            if (o1.getHyperVolumn() < o2.getHyperVolumn()) return -1;
+            return 0;
+        }
+    }
+    
+    public static class CompareHyperVolumnDescending implements Comparator<TopoTreeNode> {
+        @Override
+        public int compare(TopoTreeNode o1, TopoTreeNode o2) {
+            if (o1.getHyperVolumn() < o2.getHyperVolumn()) return 1;
+            if (o1.getHyperVolumn() > o2.getHyperVolumn()) return -1;
+            return 0;
+        }
+    }
 }
 

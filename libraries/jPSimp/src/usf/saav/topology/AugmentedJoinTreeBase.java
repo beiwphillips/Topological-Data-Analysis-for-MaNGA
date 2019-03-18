@@ -17,6 +17,7 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	protected float				   simplify = 0.0f;
 	protected float				   max_persistence = 0.0f;
 	protected int                   max_volumn = 0;
+	protected float                 max_hypervolumn = 0f;
 	protected String                metric = "persistence";
 	
 	
@@ -53,6 +54,7 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	
 	public float getMaxPersistence(){ return max_persistence; }
 	public int   getMaxVolumn(){ return max_volumn; }
+	public float getMaxHyperVolumn(){ return max_hypervolumn; }
 	
 	@Override 
 	public void setSimplificationLevel( float threshold ){
@@ -102,16 +104,26 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	    return nodes.get(i).getSimplePersistence();
 	}
 
-	public TopoTreeNode getNode(int i) {
-		return nodes.get(i);
-	}
-	
+	@Override
 	public int getVolumn(int i) {
 	    if (nodes.get(i).getValue() == global_extreme_value) {
 	        return Integer.MAX_VALUE;
 	    }
 	    return nodes.get(i).getVolumn();
 	}
+	
+	@Override
+	public float getHyperVolumn(int i) {
+	    if (nodes.get(i).getValue() == global_extreme_value) {
+	        return Float.NaN;
+	    }
+	    return nodes.get(i).getHyperVolumn();
+	}
+	
+	public TopoTreeNode getNode(int i) {
+		return nodes.get(i);
+	}
+	
 	
 }
 

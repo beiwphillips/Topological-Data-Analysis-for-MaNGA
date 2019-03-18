@@ -63,42 +63,50 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	
     protected  AugmentedJoinTreeNode processTree(JoinTreeNode current) {
         int cumulatedVolumn = current.getVolumn();
+        float cumulatedHyperVolumn = current.getHyperVolumn();
         while (current.childCount() == 1) {
             current = current.getChild(0);
             cumulatedVolumn += current.getVolumn();
+            cumulatedHyperVolumn += current.getHyperVolumn();
         }
         if (current.childCount() == 0) {
-            return createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn);
+            return createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn, cumulatedHyperVolumn);
         } else {
             AugmentedJoinTreeNode prev = processTree(current.getChild(0));
             int i = 1;
             while(i < current.childCount()) {
                 AugmentedJoinTreeNode newChild = processTree(current.getChild(i));
                 prev = createTreeNode(current.getPosition(), current.getValue(), 
-                                      prev.getVolumn() + newChild.getVolumn(), prev, newChild);
+                                      prev.getVolumn() + newChild.getVolumn(), 
+                                      prev.getHyperVolumn() + newChild.getHyperVolumn(),
+                                      prev, newChild);
                 i++;
             }
             prev.addVolumn(cumulatedVolumn);
+            prev.addHyperVolumn(cumulatedHyperVolumn);
             return prev;
         }
     }
 	
     protected AugmentedJoinTreeNode simpleProcessTree(JoinTreeNode current) {
         int cumulatedVolumn = current.getVolumn();
+        float cumulatedHyperVolumn = current.getHyperVolumn();
         while (current.childCount() == 1) {
             current = current.getChild(0);
             cumulatedVolumn += current.getVolumn();
+            cumulatedHyperVolumn += current.getHyperVolumn();
         }
         if (current.childCount() == 0) {
-            nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn));
+            nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn, cumulatedHyperVolumn));
             return (AugmentedJoinTreeNode)nodes.lastElement();
         } else {
-            AugmentedJoinTreeNode tmp = createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn);
+            AugmentedJoinTreeNode tmp = createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn, cumulatedHyperVolumn);
             for (int i = 0; i < current.childCount(); i++) {
                 AugmentedJoinTreeNode newChild = simpleProcessTree(current.getChild(i));
                 tmp.addChild(newChild);
                 newChild.setParent(tmp);
                 tmp.addVolumn(newChild.getVolumn());
+                tmp.addHyperVolumn(newChild.getHyperVolumn());
             }
             nodes.add(tmp);
             return tmp;
@@ -163,13 +171,18 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
     }
     
     protected void calculateMaxVolumn(JoinTreeNode head) {
-        int max = Integer.MIN_VALUE;
+        int volumn = Integer.MIN_VALUE;
+        float hypervolumn = Float.MIN_VALUE;
         for (JoinTreeNode child : head.getChildren()) {
             int v = child.getVolumn();
-            if (v > max)
-                max = v;
+            float h = child.getHyperVolumn();
+            if (v > volumn)
+                volumn = v;
+            if (h > hypervolumn)
+                hypervolumn = h;
         }
-        max_volumn = max;
+        max_volumn = volumn;
+        max_hypervolumn = hypervolumn;
     }
 
     public AugmentedJoinTreeNode getGlobalExtreme(){ return global_extreme; }
@@ -192,20 +205,20 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	
 	public abstract class AugmentedJoinTreeNode extends JoinTreeNode implements TopoTreeNode {
 		
-		AugmentedJoinTreeNode( int loc, float val, int volumn ){
-			super(loc, val, volumn);
+		AugmentedJoinTreeNode( int loc, float val, int volumn, float hypervolumn ){
+			super(loc, val, volumn, hypervolumn);
 		}
 		
-		protected AugmentedJoinTreeNode( int loc, float val, int volumn, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
-			super(loc, val, volumn);
+		protected AugmentedJoinTreeNode( int loc, float val, int volumn, float hypervolumn, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 ){
+			super(loc, val, volumn, hypervolumn);
 			this.addChild(c0);
 			this.addChild(c1);
 		}
 
 	}
 	
-	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, int volumn );
-	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, int volumn, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 );
+	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, int volumn, float hypervolumn );
+	protected abstract AugmentedJoinTreeNode createTreeNode( int loc, float val, int volumn, float hypervolumn, AugmentedJoinTreeNode c0, AugmentedJoinTreeNode c1 );
 
 	
 

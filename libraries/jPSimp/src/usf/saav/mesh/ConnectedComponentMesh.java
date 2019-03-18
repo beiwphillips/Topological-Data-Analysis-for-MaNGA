@@ -90,6 +90,15 @@ public class ConnectedComponentMesh extends Mesh {
 		public int size() {
 		    return super.size();
 		}
+		
+		@Override
+		public float integral() {
+		    float sum = 0f; 
+	        for (Vertex v : this) {
+	            sum += v.value();
+	        }
+	        return sum;
+		}
 
 		@Override
 		public int[] neighbors() {

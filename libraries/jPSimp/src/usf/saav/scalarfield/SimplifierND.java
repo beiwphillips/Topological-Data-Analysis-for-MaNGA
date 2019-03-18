@@ -100,6 +100,12 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
                         new TopoTreeNode.CompareVolumnDescending()
                         );
                 break;
+            case "hypervolumn":
+                workList = new PriorityQueue<TopoTreeNode>( 
+                        sf.getSize(), 
+                        new TopoTreeNode.CompareHyperVolumnDescending()
+                        );
+                break;
             default:
                 throw new IllegalArgumentException();
         }
