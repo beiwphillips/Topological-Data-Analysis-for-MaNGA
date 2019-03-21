@@ -124,6 +124,9 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 		return nodes.get(i);
 	}
 	
+	public boolean isValid(int i) {
+	    return nodes.get(i).isValid();
+	}
 	
 }
 

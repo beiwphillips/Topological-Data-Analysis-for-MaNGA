@@ -36,6 +36,7 @@ public class JoinTreeNode implements TopoTreeNode {
     private float value;
     private int volumn;
     private float hypervolumn;
+    private boolean valid = true;
     
 	protected Vector<JoinTreeNode> children = new Vector<JoinTreeNode>( );
 	protected JoinTreeNode parent  = null;
@@ -98,6 +99,9 @@ public class JoinTreeNode implements TopoTreeNode {
     public void setHyperVolumn(float hyperVolumn){ this.hypervolumn = hyperVolumn; }
     public void addVolumn(int toAdd){ this.volumn += toAdd; }
     public void addHyperVolumn(float toAdd){ this.hypervolumn += toAdd; }
+    
+    @Override public void setValid(boolean valid) {this.valid = valid;}
+    @Override public boolean isValid() {return this.valid;}
     
     @Override public NodeType getType() { return NodeType.UNKNOWN; }
 

@@ -61,6 +61,8 @@ public interface TopoTreeNode {
 	float getHyperVolumn();
 	float getAbsoluteHyperVolumn();
 
+	void setValid(boolean valid);
+	boolean isValid();
 	
 	
     public static class ComparePersistenceAscending implements Comparator<TopoTreeNode> {

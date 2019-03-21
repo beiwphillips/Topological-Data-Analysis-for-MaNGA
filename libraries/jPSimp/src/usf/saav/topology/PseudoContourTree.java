@@ -152,6 +152,12 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 		return st.getNode(i-mt.size());
 	}
 	
+    public boolean isValid(int i) {
+        if( i < mt.size() )
+            return mt.isValid(i);
+        return st.isValid(i-mt.size());
+    }
+	
 	public boolean isActive(int i) {
 	    if (metric.equals("persistence"))
 	        return getPersistence(i) > simplify * max_persistence;
