@@ -152,6 +152,7 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 	private void pruneLeaf(TopoTreeNode n, TopoTreeNode p) {
 	    n.setParent(null);
 	    p.removeChild((JoinTreeNode) n);
+	    n.setValid(false);
 	}
 	
 	private TopoTreeNode reduceVertex(TopoTreeNode n, TopoTreeNode p) {
