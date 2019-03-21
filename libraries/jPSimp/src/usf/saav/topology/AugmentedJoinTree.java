@@ -46,7 +46,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		JoinTree jt = new JoinTree( cl, comparator );
 		jt.run();
 
-	     head = simpleProcessTree(jt.getRoot());
+	    head = simpleProcessTree(jt.getRoot());
 	     
 		calculateMaxPersistence(jt.getRoot());
 		calculateMaxVolumn(head);
@@ -175,7 +175,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
         float hypervolumn = Float.MIN_VALUE;
         for (JoinTreeNode child : head.getChildren()) {
             int v = child.getVolumn();
-            float h = child.getHyperVolumn();
+            float h = Math.abs(child.getHyperVolumn() - head.getValue() * head.getVolumn());
             if (v > volumn)
                 volumn = v;
             if (h > hypervolumn)

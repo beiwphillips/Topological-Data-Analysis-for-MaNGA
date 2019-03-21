@@ -98,25 +98,25 @@ public class AugmentedJoinTreeBase extends BasicObject implements TopoTree {
 	
 	@Override
 	public float getSimplePersistence(int i) {
-	    if (nodes.get(i).getValue() == global_extreme_value) {
-	        return Float.NaN;
-	    }
+//	    if (nodes.get(i).getValue() == global_extreme_value) {
+//	        return Float.NaN;
+//	    }
 	    return nodes.get(i).getSimplePersistence();
 	}
 
 	@Override
 	public int getVolumn(int i) {
-	    if (nodes.get(i).getValue() == global_extreme_value) {
-	        return Integer.MAX_VALUE;
-	    }
+//	    if (nodes.get(i).getValue() == global_extreme_value) {
+//	        return Integer.MAX_VALUE;
+//	    }
 	    return nodes.get(i).getVolumn();
 	}
 	
 	@Override
 	public float getHyperVolumn(int i) {
-	    if (nodes.get(i).getValue() == global_extreme_value) {
-	        return Float.NaN;
-	    }
+//	    if (nodes.get(i).getValue() == global_extreme_value) {
+//	        return Float.NaN;
+//	    }
 	    return nodes.get(i).getHyperVolumn();
 	}
 	

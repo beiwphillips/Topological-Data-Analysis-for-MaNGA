@@ -162,7 +162,10 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
         p.removeChild(sbl);
         np.removeChild((JoinTreeNode) p);
         np.addChild((JoinTreeNode) sbl);
-        sbl.setHyperVolumn(p.getHyperVolumn() - n.getHyperVolumn());
+        sbl.setVolumn(p.getVolumn());
+        sbl.addHyperVolumn(-n.getAbsoluteHyperVolumn());
+        np.addHyperVolumn(-n.getAbsoluteHyperVolumn());
+        p.setValid(false);
         return sbl;
 	}
 	

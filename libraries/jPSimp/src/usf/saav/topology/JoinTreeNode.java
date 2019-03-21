@@ -90,7 +90,11 @@ public class JoinTreeNode implements TopoTreeNode {
         if( parent == null ) return Float.NaN;
         return Math.abs(hypervolumn - parent.getValue() * getVolumn()); 
     }
+    @Override public float getAbsoluteHyperVolumn() {
+        return hypervolumn;
+    }
     
+    public void setVolumn(int volumn){ this.volumn = volumn; }
     public void setHyperVolumn(float hyperVolumn){ this.hypervolumn = hyperVolumn; }
     public void addVolumn(int toAdd){ this.volumn += toAdd; }
     public void addHyperVolumn(float toAdd){ this.hypervolumn += toAdd; }

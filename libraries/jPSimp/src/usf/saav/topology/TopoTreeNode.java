@@ -59,6 +59,7 @@ public interface TopoTreeNode {
     float getValue();
 	int getVolumn();
 	float getHyperVolumn();
+	float getAbsoluteHyperVolumn();
 
 	
 	
