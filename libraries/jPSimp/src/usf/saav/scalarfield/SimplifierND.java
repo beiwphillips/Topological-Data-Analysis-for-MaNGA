@@ -91,19 +91,19 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
             case "persistence":
                 workList = new PriorityQueue<TopoTreeNode>( 
                         sf.getSize(), 
-                        new TopoTreeNode.CompareSimplePersistenceDescending()
+                        new TopoTreeNode.CompareSimplePersistenceAscending()
                         );
                 break;
             case "volumn":
                 workList = new PriorityQueue<TopoTreeNode>( 
                         sf.getSize(), 
-                        new TopoTreeNode.CompareVolumnDescending()
+                        new TopoTreeNode.CompareVolumnAscending()
                         );
                 break;
             case "hypervolumn":
                 workList = new PriorityQueue<TopoTreeNode>( 
                         sf.getSize(), 
-                        new TopoTreeNode.CompareHyperVolumnDescending()
+                        new TopoTreeNode.CompareHyperVolumnAscending()
                         );
                 break;
             default:
