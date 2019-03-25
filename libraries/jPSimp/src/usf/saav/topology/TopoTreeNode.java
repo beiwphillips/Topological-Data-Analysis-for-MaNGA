@@ -60,6 +60,7 @@ public interface TopoTreeNode {
 	int getVolumn();
 	float getHyperVolumn();
 	float getAbsoluteHyperVolumn();
+	void addHyperVolumn(float toAdd);
 
 	void setValid(boolean valid);
 	boolean isValid();

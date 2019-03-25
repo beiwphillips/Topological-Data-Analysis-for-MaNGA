@@ -63,11 +63,11 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	
     protected  AugmentedJoinTreeNode processTree(JoinTreeNode current) {
         int cumulatedVolumn = current.getVolumn();
-        float cumulatedHyperVolumn = current.getHyperVolumn();
+        float cumulatedHyperVolumn = current.getAbsoluteHyperVolumn();
         while (current.childCount() == 1) {
             current = current.getChild(0);
             cumulatedVolumn += current.getVolumn();
-            cumulatedHyperVolumn += current.getHyperVolumn();
+            cumulatedHyperVolumn += current.getAbsoluteHyperVolumn();
         }
         if (current.childCount() == 0) {
             return createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn, cumulatedHyperVolumn);
@@ -78,7 +78,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
                 AugmentedJoinTreeNode newChild = processTree(current.getChild(i));
                 prev = createTreeNode(current.getPosition(), current.getValue(), 
                                       prev.getVolumn() + newChild.getVolumn(), 
-                                      prev.getHyperVolumn() + newChild.getHyperVolumn(),
+                                      prev.getAbsoluteHyperVolumn() + newChild.getAbsoluteHyperVolumn(),
                                       prev, newChild);
                 i++;
             }
@@ -90,11 +90,11 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 	
     protected AugmentedJoinTreeNode simpleProcessTree(JoinTreeNode current) {
         int cumulatedVolumn = current.getVolumn();
-        float cumulatedHyperVolumn = current.getHyperVolumn();
+        float cumulatedHyperVolumn = current.getAbsoluteHyperVolumn();
         while (current.childCount() == 1) {
             current = current.getChild(0);
             cumulatedVolumn += current.getVolumn();
-            cumulatedHyperVolumn += current.getHyperVolumn();
+            cumulatedHyperVolumn += current.getAbsoluteHyperVolumn();
         }
         if (current.childCount() == 0) {
             nodes.add(createTreeNode(current.getPosition(), current.getValue(), cumulatedVolumn, cumulatedHyperVolumn));
@@ -106,7 +106,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
                 tmp.addChild(newChild);
                 newChild.setParent(tmp);
                 tmp.addVolumn(newChild.getVolumn());
-                tmp.addHyperVolumn(newChild.getHyperVolumn());
+                tmp.addHyperVolumn(newChild.getAbsoluteHyperVolumn());
             }
             nodes.add(tmp);
             return tmp;
@@ -175,7 +175,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
         float hypervolumn = Float.MIN_VALUE;
         for (JoinTreeNode child : head.getChildren()) {
             int v = child.getVolumn();
-            float h = Math.abs(child.getHyperVolumn() - head.getValue() * head.getVolumn());
+            float h = Math.abs(child.getAbsoluteHyperVolumn() - head.getValue() * head.getVolumn());
             if (v > volumn)
                 volumn = v;
             if (h > hypervolumn)

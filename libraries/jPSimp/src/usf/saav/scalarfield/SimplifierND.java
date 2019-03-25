@@ -126,13 +126,14 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 		}
 		
 		while (!workList.isEmpty()) {
-//          System.out.println("Legal Tree: "+ct.checkTree());
+//            System.out.println("Legal Tree: "+ct.checkTree());
 		    TopoTreeNode n = workList.poll();
 		    TopoTreeNode p = n.getParent();
 		    pruneLeaf(n, p);
-	        modifyScalarField(n, p);
+//		    findVolumeBalancingValue(n, p);
+	        float volumeChange = modifyScalarField(n, p);
 	        if (p.hasParent() && p.getChildCount() == 1) {
-	            TopoTreeNode newVertex = reduceVertex(n, p);
+	            TopoTreeNode newVertex = reduceVertex(n, p, volumeChange);
 	            if (workList.remove(newVertex) && ct.isPruning(newVertex) && 
 	                    (newVertex.getType() == NodeType.LEAF_MAX || newVertex.getType() == NodeType.LEAF_MIN)) {
                     workList.add(newVertex);
@@ -150,12 +151,19 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 	}
 	
 	private void pruneLeaf(TopoTreeNode n, TopoTreeNode p) {
+        float nHyperVolume = n.getAbsoluteHyperVolumn() - n.getValue() * n.getVolumn();
+        TopoTreeNode cur = p;
+        while (cur != null) {
+            cur.addHyperVolumn(-nHyperVolume);
+            cur = cur.getParent();
+        }
+        
 	    n.setParent(null);
 	    p.removeChild((JoinTreeNode) n);
 	    n.setValid(false);
 	}
 	
-	private TopoTreeNode reduceVertex(TopoTreeNode n, TopoTreeNode p) {
+	private TopoTreeNode reduceVertex(TopoTreeNode n, TopoTreeNode p, float volumeChange) {
 	    JoinTreeNode sbl = p.getChild(0);
         JoinTreeNode np = (JoinTreeNode) p.getParent();
         sbl.setParent(np);
@@ -164,17 +172,17 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
         np.removeChild((JoinTreeNode) p);
         np.addChild((JoinTreeNode) sbl);
         sbl.setVolumn(p.getVolumn());
-        sbl.addHyperVolumn(-n.getAbsoluteHyperVolumn());
-        np.addHyperVolumn(-n.getAbsoluteHyperVolumn());
+        sbl.setHyperVolumn(p.getAbsoluteHyperVolumn());
         p.setValid(false);
         return sbl;
 	}
 	
-	private void modifyScalarField(TopoTreeNode n, TopoTreeNode p) {
+	private float modifyScalarField(TopoTreeNode n, TopoTreeNode p) {
 
         Set<Integer>   compUsed = new HashSet<Integer>();
         Queue<Integer> workList = null;
         Set<Integer>   pModify  = new HashSet<Integer>();
+        float volumeChange = 0;
         
         if( n.getType() == NodeType.LEAF_MIN ) 
             workList = new PriorityQueue<Integer>( 11, new ComponentComparatorAscending() );
@@ -207,11 +215,25 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
         for( Integer c : pModify ){
             Vertex cur = cl.get(c);
             for( int pos : cur.positions() ) {
-                if( n.getType() == NodeType.LEAF_MIN ) 
+                if( n.getType() == NodeType.LEAF_MIN ) {
+                    volumeChange += Math.abs( img[pos] - p.getValue() );
                     img[pos] = Math.max( img[pos], p.getValue() );
-                if( n.getType() == NodeType.LEAF_MAX ) 
+                }
+                if( n.getType() == NodeType.LEAF_MAX ) {
+                    volumeChange += Math.abs( img[pos] - p.getValue() );
                     img[pos] = Math.min( img[pos], p.getValue() );
+                }
             }
+        }
+        
+        return volumeChange;
+	}
+	
+	private void printHyperVolumn() {
+	    for(int i = 0; i < ct.size(); i++){
+            TopoTreeNode n = ct.getNode(i);
+            if (n.isValid())
+                System.out.println(n.getValue()+"; "+n.getHyperVolumn()+"; "+n.getAbsoluteHyperVolumn()+"; "+n.getType()+"; "+ct.isPruning(n));
         }
 	}
 
