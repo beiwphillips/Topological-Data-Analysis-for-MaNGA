@@ -28,12 +28,14 @@ public class Simplifier3D extends SimplifierND implements ScalarField3D {
     private ScalarField3D sf;
     
 
-    public Simplifier3D(ScalarField3D sf, PseudoContourTree ct, Mesh cl, boolean runImmediately ) {
-        this( sf, ct, cl, runImmediately, true );
+    public Simplifier3D(ScalarField3D sf, PseudoContourTree ct, Mesh cl, 
+            float simplification, String metric, boolean runImmediately ) {
+        this( sf, ct, cl, simplification, metric, runImmediately, true );
     }
     
-    public Simplifier3D(ScalarField3D sf, PseudoContourTree ct, Mesh cl, boolean runImmediately, boolean verbose ) {
-        super(sf, ct, cl, runImmediately);
+    public Simplifier3D(ScalarField3D sf, PseudoContourTree ct, Mesh cl, 
+            float simplification, String metric, boolean runImmediately, boolean verbose ) {
+        super(sf, ct, cl, simplification, metric, runImmediately);
         this.sf = sf;
     }
 

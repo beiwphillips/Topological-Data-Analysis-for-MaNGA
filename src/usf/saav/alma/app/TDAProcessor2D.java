@@ -70,7 +70,7 @@ public class TDAProcessor2D extends BasicObject {
 		ct.setSimplificationMetric( metric );
 		this.print_info_message("Simplfying Field");
 //		ps2d = new PersistenceSimplifier2D( slice, ct, cl, true );
-		s2d = new Simplifier2D(slice, ct, cl, true);
+		s2d = new Simplifier2D(slice, ct, cl, simplification, metric, true);
 
 	}
 

@@ -38,6 +38,8 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 	private ScalarFieldND sf;
 	private PseudoContourTree ct;
 	private Mesh cl;
+	private float simplification;
+	private String metric;
 
 	private float [] img;
 
@@ -46,15 +48,19 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 	protected Callback cb = null;
 
 
-	public SimplifierND( ScalarFieldND sf, PseudoContourTree ct, Mesh cl, boolean runImmediately ){
-		this( sf, ct, cl, runImmediately, true );
+	public SimplifierND( ScalarFieldND sf, PseudoContourTree ct, Mesh cl, 
+	        float simplification, String metric, boolean runImmediately ){
+		this( sf, ct, cl, simplification, metric, runImmediately, true );
 	}
 
-	public SimplifierND( ScalarFieldND sf, PseudoContourTree ct, Mesh cl, boolean runImmediately, boolean verbose ){
+	public SimplifierND( ScalarFieldND sf, PseudoContourTree ct, Mesh cl, 
+	        float simplification, String metric, boolean runImmediately, boolean verbose ){
 		super( verbose );
 		this.sf = sf;
 		this.ct = ct;
 		this.cl = cl;
+		this.simplification = simplification;
+		this.metric = metric;
 		if( runImmediately ) run( );
 	}
 
@@ -87,20 +93,20 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 //		Vector<TopoTreeNode> workList = new Vector<TopoTreeNode>();
 		Queue<TopoTreeNode> workList;
 		
-		switch (ct.getSimplificationMetric()) {
+		switch (this.metric) {
             case "persistence":
                 workList = new PriorityQueue<TopoTreeNode>( 
                         sf.getSize(), 
                         new TopoTreeNode.CompareSimplePersistenceAscending()
                         );
                 break;
-            case "volumn":
+            case "volume":
                 workList = new PriorityQueue<TopoTreeNode>( 
                         sf.getSize(), 
                         new TopoTreeNode.CompareVolumnAscending()
                         );
                 break;
-            case "hypervolumn":
+            case "hypervolume":
                 workList = new PriorityQueue<TopoTreeNode>( 
                         sf.getSize(), 
                         new TopoTreeNode.CompareHyperVolumnAscending()
@@ -112,7 +118,7 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 
 		// Simplify the field, component by component
 		for(int i = 0; i < ct.size(); i++){
-		    if (ct.isPruning(i)) {
+//		    if (ct.isPruning(i)) {
 		        TopoTreeNode n = ct.getNode(i);
 		        switch( n.getType() ){
         				case LEAF_MAX:
@@ -122,23 +128,29 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
         			    default:
         			        break;
         			}
-		    }
 		}
 		
-		while (!workList.isEmpty()) {
+		int num_simplified = 0;
+		while (num_simplified < simplification * ct.getNumLeaves()) {
+//		while (!workList.isEmpty()) {
 //            System.out.println("Legal Tree: "+ct.checkTree());
 		    TopoTreeNode n = workList.poll();
+		    if (!n.hasParent()) {
+                break;
+            }
 		    TopoTreeNode p = n.getParent();
 		    pruneLeaf(n, p);
 //		    findVolumeBalancingValue(n, p);
 	        float volumeChange = modifyScalarField(n, p);
 	        if (p.hasParent() && p.getChildCount() == 1) {
 	            TopoTreeNode newVertex = reduceVertex(n, p, volumeChange);
-	            if (workList.remove(newVertex) && ct.isPruning(newVertex) && 
+	            if (workList.remove(newVertex) && 
+//	                    ct.isPruning(newVertex) && 
 	                    (newVertex.getType() == NodeType.LEAF_MAX || newVertex.getType() == NodeType.LEAF_MIN)) {
                     workList.add(newVertex);
 	            }
 	        }
+	        num_simplified++;
 		}
 
 		print_info_message("Build Complete");

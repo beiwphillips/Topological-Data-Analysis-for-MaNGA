@@ -36,6 +36,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	private float max_persistence = 0;
 	private int max_volumn = 0;
 	private float max_hypervolumn = 0;
+	private int num_leaves = 0;
 	private float simplify = 0.0f;
 	private String metric = "persistence";
 	
@@ -75,6 +76,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 		max_persistence = Math.max( mt.getMaxPersistence(), st.getMaxPersistence() );
 		max_volumn = Math.max(mt.getMaxVolumn(), st.getMaxVolumn());
 		max_hypervolumn = Math.max(mt.getMaxHyperVolumn(), st.getMaxHyperVolumn());
+		num_leaves = (mt.size() + st.size())/2 + 1;
 		global_min = mt.getGlobalExtreme();
 		global_max = st.getGlobalExtreme();
 		
@@ -96,6 +98,7 @@ public class PseudoContourTree extends BasicObject implements TopoTree {
 	public float getMaxPersistence(){ return max_persistence; }
 	public int getMaxVolumn(){ return max_volumn; }
 	public float getMaxHyperVolumn(){ return max_hypervolumn; }
+	public int getNumLeaves(){ return num_leaves; }
 	public AugmentedJoinTreeNode getGlobalMin(){ return global_min; }
 	public AugmentedJoinTreeNode getGlobalMax(){ return global_max; }
 	

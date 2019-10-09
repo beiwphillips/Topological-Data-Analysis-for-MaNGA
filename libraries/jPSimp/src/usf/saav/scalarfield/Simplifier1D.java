@@ -27,11 +27,13 @@ public class Simplifier1D extends SimplifierND implements ScalarField1D {
 
     private ScalarField1D sf;
     
-    public Simplifier1D(ScalarField1D sf, PseudoContourTree ct, Mesh cl, boolean runImmediately ) {
-        this( sf, ct, cl, runImmediately, true );
+    public Simplifier1D(ScalarField1D sf, PseudoContourTree ct, Mesh cl, 
+            float simplification, String metric, boolean runImmediately ) {
+        this( sf, ct, cl, simplification, metric, runImmediately, true );
     }
-    public Simplifier1D(ScalarField1D sf, PseudoContourTree ct, Mesh cl, boolean runImmediately, boolean verbose ) {
-        super(sf, ct, cl, runImmediately);
+    public Simplifier1D(ScalarField1D sf, PseudoContourTree ct, Mesh cl, 
+            float simplification, String metric, boolean runImmediately, boolean verbose ) {
+        super(sf, ct, cl, simplification, metric, runImmediately);
         this.sf = sf;
     }
 

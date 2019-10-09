@@ -28,11 +28,13 @@ public class Simplifier2D extends SimplifierND implements ScalarField2D {
 
     private ScalarField2D sf;
     
-    public Simplifier2D(ScalarField2D sf, PseudoContourTree ct, Mesh cl, boolean runImmediately ) {
-        this( sf, ct, cl, runImmediately, true );
+    public Simplifier2D(ScalarField2D sf, PseudoContourTree ct, Mesh cl, 
+            float simplification, String metric, boolean runImmediately ) {
+        this( sf, ct, cl, simplification, metric, runImmediately, true );
     }
-    public Simplifier2D(ScalarField2D sf, PseudoContourTree ct, Mesh cl, boolean runImmediately, boolean verbose ) {
-        super(sf, ct, cl, runImmediately);
+    public Simplifier2D(ScalarField2D sf, PseudoContourTree ct, Mesh cl, 
+            float simplification, String metric, boolean runImmediately, boolean verbose ) {
+        super(sf, ct, cl, simplification, metric, runImmediately);
         this.sf = sf;
     }
 

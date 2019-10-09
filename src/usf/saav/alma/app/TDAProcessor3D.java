@@ -70,7 +70,7 @@ public class TDAProcessor3D extends BasicObject {
 		ct.setSimplificationMetric( metric );
 		this.print_info_message("Simplfying Field");
 //		ps3d = new PersistenceSimplifier3D( vol, ct, cl, true );
-	    s3d = new Simplifier3D( vol, ct, cl, true );
+	    s3d = new Simplifier3D( vol, ct, cl, simplification, metric, true );
 
 	}
 
