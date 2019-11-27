@@ -157,10 +157,10 @@ public class RawFitsReader extends FitsReader.Default implements FitsReader {
 				if (("FLUX").equals(img.getHeader().getStringValue("EXTNAME")))
 				    readingFLUX(img);
 
-				if (img.getHeader().getStringValue("EXTNAME") == null)
-				    readingFLUX(img);
+//				if (img.getHeader().getStringValue("EXTNAME") == null)
+//				    readingFLUX(img);
 				
-				if( ("MASK").equals(img.getHeader().getStringValue("EXTNAME")) )
+				if( ("IVAR").equals(img.getHeader().getStringValue("EXTNAME")) )
 				    readingMASK(img);
 				
 			}
