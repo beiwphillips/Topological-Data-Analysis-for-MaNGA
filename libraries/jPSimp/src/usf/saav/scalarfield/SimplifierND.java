@@ -90,7 +90,6 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 			img[i] = sf.getValue(i);
 		}
 
-//		Vector<TopoTreeNode> workList = new Vector<TopoTreeNode>();
 		Queue<TopoTreeNode> workList;
 		
 		switch (this.metric) {
@@ -118,34 +117,39 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
 
 		// Simplify the field, component by component
 		for(int i = 0; i < ct.size(); i++){
-//		    if (ct.isPruning(i)) {
-		        TopoTreeNode n = ct.getNode(i);
-		        switch( n.getType() ){
-        				case LEAF_MAX:
-        			    case LEAF_MIN:
-        				    workList.add(n);
-        		            break;
-        			    default:
-        			        break;
-        			}
+	        TopoTreeNode n = ct.getNode(i);
+	        switch( n.getType() ){
+    				case LEAF_MAX:
+    			    case LEAF_MIN:
+//    			        System.out.println("Tree leaves: "+n.getPosition()+
+//    			                ":"+Math.round(n.getSimplePersistence()*10000)+
+//    			                ":"+Math.round(n.getValue()*10000));
+    				    workList.add(n);
+    		            break;
+    			    default:
+    			        break;
+    			}
 		}
+		
+		System.out.println("Beginning removal...");
 		
 		int num_simplified = 0;
 		while (num_simplified < simplification * ct.getNumLeaves()) {
-//		while (!workList.isEmpty()) {
-//            System.out.println("Legal Tree: "+ct.checkTree());
+//          System.out.println("Legal Tree: "+ct.checkTree());
 		    TopoTreeNode n = workList.poll();
 		    if (!n.hasParent()) {
                 break;
             }
+//		    System.out.println("Nodes to remove: "+n.getPosition()+
+//                    ":"+Math.round(n.getSimplePersistence()*10000)+
+//                    ":"+Math.round(n.getValue()*10000));
 		    TopoTreeNode p = n.getParent();
 		    pruneLeaf(n, p);
-//		    findVolumeBalancingValue(n, p);
 	        float volumeChange = modifyScalarField(n, p);
+	        System.out.println(Math.round(volumeChange*10000));
 	        if (p.hasParent() && p.getChildCount() == 1) {
 	            TopoTreeNode newVertex = reduceVertex(n, p, volumeChange);
 	            if (workList.remove(newVertex) && 
-//	                    ct.isPruning(newVertex) && 
 	                    (newVertex.getType() == NodeType.LEAF_MAX || newVertex.getType() == NodeType.LEAF_MIN)) {
                     workList.add(newVertex);
 	            }
@@ -212,7 +216,7 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
             pModify.add(cur);
 
             // If the component is the parent, we're done
-            if( cur == p.getPosition() ) break;
+            if( cur == p.getPosition() || cl.get(cur).value() == p.getValue() ) break;
 
             // Add neighbors who haven't already been processed to the process queue
             for( int neighbor : cl.get(cur).neighbors() ){
@@ -222,6 +226,9 @@ public abstract class SimplifierND extends ScalarFieldND.Default implements Scal
                 }
             }
         }
+        
+//        System.out.println("workList: "+workList.size());
+//        System.out.println("pModify: "+pModify.size());
         
         // modify values
         for( Integer c : pModify ){
