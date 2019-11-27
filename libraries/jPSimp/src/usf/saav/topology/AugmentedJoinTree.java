@@ -48,7 +48,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 
 	    head = simpleProcessTree(jt.getRoot());
 	     
-		calculateMaxPersistence(jt.getRoot());
+	    calculateMaxPersistenceAndGlobalExtreme(head);
 		calculateMaxVolumn(head);
 		
 //        for(int i = 0; i < size(); i++){
@@ -61,6 +61,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
 		print_info_message( "Building tree complete" );
 	}
 	
+    // Paul's code, not in use any more.
     protected  AugmentedJoinTreeNode processTree(JoinTreeNode current) {
         int cumulatedVolumn = current.getVolumn();
         float cumulatedHyperVolumn = current.getAbsoluteHyperVolumn();
@@ -113,6 +114,7 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
         }
     }
 
+    // Paul's code, not in use any more.
     protected void calculateMaxPersistence(JoinTreeNode root){
         print_info_message( "Finding Persistence");
         
@@ -170,6 +172,37 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
         }
     }
     
+    protected void calculateMaxPersistenceAndGlobalExtreme(JoinTreeNode head) {
+        JoinTreeNode minNode = null;
+        float minValue = Float.MAX_VALUE;
+        JoinTreeNode maxNode = null;
+        float maxValue = Float.MIN_VALUE;
+        Stack<JoinTreeNode> pstack = new Stack<JoinTreeNode>( );
+        pstack.push(head);
+        while (!pstack.isEmpty()) {
+            JoinTreeNode curr = pstack.pop();
+            if (curr.getValue() < minValue) {
+                minNode = curr;
+                minValue = curr.getValue();
+            }
+            if (curr.getValue() > maxValue) {
+                maxNode = curr;
+                maxValue = curr.getValue();
+            }
+            for (JoinTreeNode child : curr.getChildren()) {
+                pstack.push(child);
+            }
+        }
+        this.max_persistence = Math.abs(maxValue - minValue);
+        if (this.comparator.compare(minNode, maxNode) < 0) {
+            this.global_extreme = (AugmentedJoinTreeNode) maxNode;
+            this.global_extreme_value = maxValue;
+        } else {
+            this.global_extreme = (AugmentedJoinTreeNode) minNode;
+            this.global_extreme_value = maxValue;
+        }
+    }
+    
     protected void calculateMaxVolumn(JoinTreeNode head) {
         int volumn = Integer.MIN_VALUE;
         float hypervolumn = Float.MIN_VALUE;
@@ -183,6 +216,24 @@ public abstract class AugmentedJoinTree extends AugmentedJoinTreeBase implements
         }
         max_volumn = volumn;
         max_hypervolumn = hypervolumn;
+    }
+    
+    // Debugging only
+    protected void printTree(JoinTreeNode head, int level) {
+        String spaces = new String(new char[level]).replace("\0", "+");
+        System.out.println(spaces+Math.round(head.getValue()*10000));
+        for (JoinTreeNode child : head.children) {
+            this.printTree(child, level+1);
+        }
+    }
+    
+    // Debugging only
+    protected void printSaddle(JoinTreeNode head) {
+        if (head.childCount() == 1) {
+            this.printSaddle(head.getChild(0));
+        } else if (head.childCount() > 1) {
+            System.out.println("Root of the tree: "+Math.round(head.getValue()*10000));
+        }
     }
 
     public AugmentedJoinTreeNode getGlobalExtreme(){ return global_extreme; }
