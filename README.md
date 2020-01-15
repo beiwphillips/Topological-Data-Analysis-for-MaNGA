@@ -4,6 +4,8 @@ This program is developed for a project of my thesis for the MS in Computing at 
 
 This project is supported by Carnegie Institution for Science for a Carnegie Science Venture Grant on Extracting the Full Information Content of Astrophysical Data Cubes. The project is joint work with Juna A. Kollmeier, Paul Rosen, Anil Seth, Joel Brownstein, Guillermo Blanc, Nicholas Fraser Boardman, Gail Zasowski, and Bei Wang. 
 
+For a detailed explanation of data structure, algorithms, and evaluation results, please refer to my thesis.
+
 ## Prerequisites
 1. In order to run the program, please make sure you have Java SE Development Kit 8 installed on your computer. If not, please follow the instructions on this website https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html.
 
