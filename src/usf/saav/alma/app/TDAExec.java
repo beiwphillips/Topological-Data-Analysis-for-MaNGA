@@ -78,7 +78,7 @@ public class TDAExec {
 				
 				ScalarField2D writeslice = fits.getSlice(d, 0);
 				if (!ScalarFieldND.Default.isValidField(writeslice)) {
-				    fw.writeSlice(writeslice);
+				    fw.writeSlice(writeslice, d);
 				    continue;
 				}
 				if( (treedim == TreeDimension.DIM_2D || treedim == TreeDimension.DIM_2D_STACK) && zr.inRange(d) ){
@@ -89,8 +89,7 @@ public class TDAExec {
 					ScalarField2D modslice = new Extract2DFrom3D( volProc.s3d, d-zr.start() );
 					writeslice = new Composite2D(writeslice, modslice, xr.start(), yr.start() );
 				}
-				fw.writeSlice( writeslice );
-				
+				fw.writeSlice( writeslice, d );
 			}
 			fw.close();
 		} catch (IOException | FitsException e) {
